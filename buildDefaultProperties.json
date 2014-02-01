@@ -1,0 +1,6 @@
+{
+    "deploydir": "/opt/appserver/webapps/emberchat",
+    "app": "/path/to/your/appshim",
+    "dist": "dist",
+    "src": "src"
+}

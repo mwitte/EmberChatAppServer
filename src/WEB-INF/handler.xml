@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="2.4">
+
+    <display-name>SocketHandler</display-name>
+    <description>Awesome :)</description>
+
+    <handler>
+        <description><![CDATA[Handler to handle the socket]]></description>
+        <display-name>SocketHandler</display-name>
+        <handler-name>SocketHandler</handler-name>
+        <handler-class>\EmberChat\Handler\SocketHandler</handler-class>
+    </handler>
+
+    <handler-mapping>
+        <handler-name>SocketHandler</handler-name>
+        <url-pattern>/socket</url-pattern>
+    </handler-mapping>
+
+</web-app>
