@@ -11,7 +11,7 @@
 
 You need node.js and the appshimp of the EmberChat project for building this project.
 
-**Make sure** you created a `buildProperties.json` to specify the location for the appshim!
+**Make sure** you created a `build/buildProperties.json` to specify the location for the appshim!
 ```
 {
     "app": "/workspace/emberchat/dist"
@@ -29,5 +29,5 @@ There is also a `deploy` task and a watching deploy task `server`. Probably you 
 
 The appserver needs a restart after every change with root rights. For this purpose there is a separate node.js script you can use.
 ```
-sudo node RestartListener.js
+sudo node build/RestartListener.js
 ```

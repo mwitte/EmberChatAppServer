@@ -15,9 +15,18 @@ var fs = require('fs');
 var sys = require('sys');
 var exec = require('child_process').exec;
 
+// LOAD AND MERGE BUILD PROPERTIES
+var MergeBuildPropertiesClass = require('./MergeBuildProperties');
+var propertyMerger = new MergeBuildPropertiesClass('buildDefaultProperties.json', 'buildProperties.json');
+var buildProperties = propertyMerger.merge();
+
 function puts(error, stdout, stderr) { sys.puts(stdout) }
 
-fs.watchFile('./dist', function (curr, prev) {
+/**
+ * Watch the directory
+ */
+fs.watchFile(buildProperties.deploydir, function (curr, prev) {
     console.log(curr.mtime + 'Restarting Appserver.. ');
+    // restart the server
     exec("/opt/appserver/sbin/appserverctl restart", puts);
 });

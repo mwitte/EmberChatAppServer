@@ -1,16 +1,10 @@
 'use strict';
 
-// LOADS BUILD PROPERTIES
-var buildProperties = require('./buildDefaultProperties.json');
-var fs = require('fs');
-if (fs.existsSync('./buildProperties.json')) {
-    var optionalBuildProperties = require('./buildProperties.json');
-    buildProperties = JSON.parse((JSON.stringify(buildProperties) + JSON.stringify(optionalBuildProperties)).replace(/}{/g,","));
-}else{
-    console.info('\n\n----------------------------\n');
-    console.info('Probably you should create the buildProperties.json to overwrite the default settings');
-    console.info('\n----------------------------\n\n');
-}
+var MergeBuildPropertiesClass = require('./build/MergeBuildProperties');
+var propertyMerger = new MergeBuildPropertiesClass('buildDefaultProperties.json', 'buildProperties.json');
+
+// LOAD AND MERGE BUILD PROPERTIES
+var buildProperties = propertyMerger.merge();
 
 // check if path to appshim got set
 if(buildProperties.app === "/path/to/your/appshim"){
