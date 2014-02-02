@@ -1,0 +1,10 @@
+<datasources>
+    <datasource name="EmberChat" type="TechDivision\PersistenceContainer\Application">
+        <database>
+            <driver>pdo_sqlite</driver>
+            <path>META-INF/data/EmberChat.sqlite</path>
+            <memory>false</memory>
+        </database>
+    </datasource>
+    
+</datasources>
