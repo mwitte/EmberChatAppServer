@@ -26,6 +26,10 @@ class ClientRepository {
         $this->clients->attach($connection, $client);
     }
 
+    public function findAll(){
+        return $this->clients;
+    }
+
     /**
      * @param ConnectionInterface $connection
      * @return void

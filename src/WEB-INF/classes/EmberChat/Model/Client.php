@@ -15,6 +15,9 @@ class Client {
      */
     protected $userRepository;
 
+    /**
+     * @var User
+     */
     protected $user;
 
     /**

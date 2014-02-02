@@ -13,23 +13,12 @@ use TechDivision\WebSocketContainer\Handlers\AbstractHandler;
 class SocketHandler extends AbstractHandler {
 
     /**
-     * Class name of the persistence container proxy that handles the data.
-     *
-     * @var string
+     * @var ClientHandler
      */
-    const PROXY_CLASS = 'EmberChat\Services\UserProcessor';
+    protected $clientHandler;
 
-    /**
-     * @var ClientRepository
-     */
-    protected $clientRepository;
-
-    protected $userRepository;
-
-    public function __construct() {
-
-        $this->clientRepository = new ClientRepository();
-        $this->userRepository = new UserRepository();
+    public function __construct(){
+        $this->clientHandler = new ClientHandler();
     }
 
     public function init(HandlerConfig $config){
@@ -42,10 +31,9 @@ class SocketHandler extends AbstractHandler {
      *
      * @see \Ratchet\ComponentInterface::onOpen()
      */
-    public function onOpen(ConnectionInterface $conn) {
+    public function onOpen(ConnectionInterface $connection) {
         error_log('SocketHandler, onOpen');
-        $client = new Client($conn, $this->userRepository);
-        $this->clientRepository->addClient($client, $conn);
+        $this->clientHandler->createNewClient($connection);
     }
 
     /**
@@ -53,9 +41,9 @@ class SocketHandler extends AbstractHandler {
      *
      * @see \Ratchet\ComponentInterface::onClose()
      */
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $connection) {
         error_log('SocketHandler, onClose');
-        $this->clientRepository->removeClient($conn);
+        $this->clientHandler->unsetClient($connection);
     }
 
     /**
@@ -63,19 +51,14 @@ class SocketHandler extends AbstractHandler {
      *
      * @see \Ratchet\MessageInterface::onMessage()
      */
-    public function onMessage(ConnectionInterface $from, $msg)
-    {
+    public function onMessage(ConnectionInterface $connection, $message) {
         error_log('SocketHandler, onMessage');
+        $this->clientHandler->messageFromClient($connection, $message);
     }
 
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Ratchet\ComponentInterface::onError()
-     */
-    public function onError(ConnectionInterface $conn,\Exception $e)
-    {
+    public function onError(ConnectionInterface $connection,\Exception $e){
+        $this->clientHandler->unsetClient($connection);
         error_log($e->__toString());
-        $conn->close();
+        $connection->close();
     }
 }

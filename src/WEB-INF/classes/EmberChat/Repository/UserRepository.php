@@ -21,6 +21,18 @@ class UserRepository extends AbstractRepository {
         $this->users = $this->findAll();
     }
 
+    /**
+     * @param string $id
+     * @return User
+     */
+    public function findById($id){
+        foreach($this->users as $user){
+            if($user->getId() == $id){
+                return $user;
+            }
+        }
+    }
+
     public function findAllWithout(User $user){
         $users = array();
         foreach($this->users as &$userIterator){
