@@ -3,7 +3,7 @@
 namespace EmberChat\Model\Message;
 
 use EmberChat\Model\Message;
-use EmberChat\Model\Serializable\User;
+use EmberChat\Entities\User;
 
 class UserList extends Message {
 

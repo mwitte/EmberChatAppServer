@@ -4,7 +4,7 @@ namespace EmberChat\Model;
 
 use EmberChat\Model\Message\Settings;
 use EmberChat\Model\Message\UserList;
-use EmberChat\Model\Serializable\User;
+use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
 use Ratchet\ConnectionInterface;
 
@@ -25,8 +25,8 @@ class Client {
     /**
      * @param ConnectionInterface $connection
      */
-    public function __construct(ConnectionInterface $connection) {
-        $this->userRepository = UserRepository::getInstance();
+    public function __construct(ConnectionInterface $connection, $userRepository) {
+        $this->userRepository = $userRepository;
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);

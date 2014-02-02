@@ -3,14 +3,11 @@
 namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
-use EmberChat\Model\Message\Settings;
-use EmberChat\Model\Message\SettingsMessage;
 use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\UserRepository;
 use Ratchet\ConnectionInterface;
 use TechDivision\WebSocketContainer\Handlers\HandlerConfig;
 use TechDivision\WebSocketContainer\Handlers\AbstractHandler;
-use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
 
 
 class SocketHandler extends AbstractHandler {
@@ -27,38 +24,17 @@ class SocketHandler extends AbstractHandler {
      */
     protected $clientRepository;
 
-    protected $connection;
-
-    protected $session;
+    protected $userRepository;
 
     public function __construct() {
-        $this->connection = Factory::createContextConnection();
-        $this->session = $this->connection->createContextSession();
-    }
 
-    /**
-     * Creates a new proxy for the passed session bean class name
-     * and returns it.
-     *
-     * @param string $proxyClass The session bean class name to return the proxy for
-     * @return mixed The proxy instance
-     */
-    public function getProxy($proxyClass) {
-        $initialContext = $this->session->createInitialContext();
-        return $initialContext->lookup($proxyClass);
+        $this->clientRepository = new ClientRepository();
+        $this->userRepository = new UserRepository();
     }
 
     public function init(HandlerConfig $config){
-
         error_log('SocketHandler, init');
-
-        $user = $this->getProxy(self::PROXY_CLASS)->findByName('Matthias');
-        error_log(var_export($user, true));
-
-        // call parent init() method
         parent::init($config);
-
-        $this->clientRepository = new ClientRepository();
     }
 
     /**
@@ -68,7 +44,7 @@ class SocketHandler extends AbstractHandler {
      */
     public function onOpen(ConnectionInterface $conn) {
         error_log('SocketHandler, onOpen');
-        $client = new Client($conn);
+        $client = new Client($conn, $this->userRepository);
         $this->clientRepository->addClient($client, $conn);
     }
 
