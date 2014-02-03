@@ -2,9 +2,6 @@
 
 namespace EmberChat\Handler;
 
-use EmberChat\Model\Client;
-use EmberChat\Repository\ClientRepository;
-use EmberChat\Repository\UserRepository;
 use Ratchet\ConnectionInterface;
 use TechDivision\WebSocketContainer\Handlers\HandlerConfig;
 use TechDivision\WebSocketContainer\Handlers\AbstractHandler;
@@ -21,14 +18,15 @@ class SocketHandler extends AbstractHandler {
         $this->clientHandler = new ClientHandler();
     }
 
+    /**
+     * @param HandlerConfig $config
+     */
     public function init(HandlerConfig $config){
         error_log('SocketHandler, init');
         parent::init($config);
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @see \Ratchet\ComponentInterface::onOpen()
      */
     public function onOpen(ConnectionInterface $connection) {
@@ -37,8 +35,14 @@ class SocketHandler extends AbstractHandler {
     }
 
     /**
-     * (non-PHPdoc)
-     *
+     * @see \Ratchet\MessageInterface::onMessage()
+     */
+    public function onMessage(ConnectionInterface $connection, $message) {
+        error_log('SocketHandler, onMessage');
+        $this->clientHandler->messageFromClient($connection, $message);
+    }
+
+    /**
      * @see \Ratchet\ComponentInterface::onClose()
      */
     public function onClose(ConnectionInterface $connection) {
@@ -47,15 +51,8 @@ class SocketHandler extends AbstractHandler {
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Ratchet\MessageInterface::onMessage()
+     * @see \Ratchet\ComponentInterface::onError()
      */
-    public function onMessage(ConnectionInterface $connection, $message) {
-        error_log('SocketHandler, onMessage');
-        $this->clientHandler->messageFromClient($connection, $message);
-    }
-
     public function onError(ConnectionInterface $connection,\Exception $e){
         $this->clientHandler->unsetClient($connection);
         error_log($e->__toString());

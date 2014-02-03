@@ -61,6 +61,7 @@ class ClientHandler {
      */
     private function broadCastUserList() {
         $clients = $this->clientRepository->findAll();
+        $this->userRepository->resortUsers();
         /* @var $client Client */
         foreach($clients as $connection){
             $client = $clients[$connection];

@@ -62,4 +62,28 @@ class UserRepository extends AbstractRepository {
         error_log('addUser: ' . count($this->users));
         array_push($this->users, $user);
     }
+
+    /**
+     * Callback for usort orders users by client state
+     *
+     * @param User $a
+     * @param User $b
+     * @return int
+     */
+    static function cmpClientState($a, $b){
+        if ((bool)$a->getClient() == (bool)$b->getClient()) {
+            return 0;
+        }
+        return ($b->getClient()) ? +1 : -1;
+    }
+
+    /**
+     * Resort the users
+     */
+    public function resortUsers(){
+        if(count($this->users) > 1){
+            usort($this->users, array('\EmberChat\Repository\UserRepository', "cmpClientState"));
+        }
+
+    }
 }
