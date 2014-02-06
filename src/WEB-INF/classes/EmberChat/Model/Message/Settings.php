@@ -5,12 +5,18 @@ namespace EmberChat\Model\Message;
 use EmberChat\Model\Message;
 use EmberChat\Entities\User;
 
-class Settings extends Message {
+class Settings extends Message
+{
 
     /**
      * @var User
      */
     protected $user;
+
+    /**
+     * @var array
+     */
+    protected $rooms;
 
     /**
      * @param User $user
@@ -26,6 +32,22 @@ class Settings extends Message {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param array $rooms
+     */
+    public function setRooms($rooms)
+    {
+        $this->rooms = $rooms;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRooms()
+    {
+        return $this->rooms;
     }
 
 

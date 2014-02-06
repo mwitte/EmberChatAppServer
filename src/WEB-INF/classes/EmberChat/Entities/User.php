@@ -1,17 +1,20 @@
 <?php
 
 namespace EmberChat\Entities;
+
 use EmberChat\Model\Client;
 
 /**
  * @Entity @Table(name="user")
  */
-class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable {
+class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable
+{
 
     protected $online = false;
     private $client = null;
 
-    public function unsetClient(){
+    public function unsetClient()
+    {
         $this->client = null;
         $this->online = false;
     }
@@ -33,7 +36,8 @@ class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable
         return $this->client;
     }
 
-    public function jsonSerialize(){
+    public function jsonSerialize()
+    {
         return get_object_vars($this);
     }
 }

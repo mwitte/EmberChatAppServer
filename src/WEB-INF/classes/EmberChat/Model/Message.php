@@ -2,7 +2,8 @@
 
 namespace EmberChat\Model;
 
-abstract class Message implements \JsonSerializable {
+abstract class Message implements \JsonSerializable
+{
 
     /**
      * Type of the Message
@@ -14,16 +15,19 @@ abstract class Message implements \JsonSerializable {
     /**
      * Sets the type name for the class
      */
-    public function __construct() {
+    public function __construct()
+    {
         $fullClassName = explode('\\', get_class($this));
-        $this->type = (string) array_pop($fullClassName);
+        $this->type = (string)array_pop($fullClassName);
     }
 
     /**
      * Implementing JsonSerializable
+     *
      * @return array|mixed
      */
-    public function jsonSerialize(){
+    public function jsonSerialize()
+    {
         return get_object_vars($this);
     }
 }

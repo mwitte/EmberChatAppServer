@@ -4,13 +4,16 @@ namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\Conversation as ConversationMessage;
+use EmberChat\Model\Message\UserList;
 use EmberChat\Model\Conversation;
 use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\ConversationRepository;
+use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
 use Ratchet\ConnectionInterface;
 
-class MessageHandler {
+class MessageHandler
+{
 
     /**
      * @var UserRepository
@@ -23,6 +26,11 @@ class MessageHandler {
     protected $clientRepository;
 
     /**
+     * @var RoomRepository
+     */
+    protected $roomRepository;
+
+    /**
      * @var Client
      */
     protected $client;
@@ -32,34 +40,46 @@ class MessageHandler {
      */
     protected $conversationRepository;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->conversationRepository = new ConversationRepository();
     }
 
     /**
      * @param UserRepository $userRepository
      */
-    public function setUserRepository(UserRepository $userRepository) {
+    public function setUserRepository(UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
     /**
      * @param ClientRepository $clientRepository
      */
-    public function setClientRepository(ClientRepository $clientRepository) {
+    public function setClientRepository(ClientRepository $clientRepository)
+    {
         $this->clientRepository = $clientRepository;
+    }
+
+    /**
+     * @param RoomRepository $roomRepository
+     */
+    public function setRoomRepository(RoomRepository $roomRepository)
+    {
+        $this->roomRepository = $roomRepository;
     }
 
     /**
      * @param Client $client
      * @param string $rawMessage
      */
-    public function processMessage(Client $client, $rawMessage){
+    public function processMessage(Client $client, $rawMessage)
+    {
         $this->client = $client;
         $message = json_decode($rawMessage);
 
 
-        switch($message->type){
+        switch ($message->type) {
             case 'requestHistory':
                 $this->requestHistory($message);
                 break;
@@ -72,7 +92,8 @@ class MessageHandler {
         }
     }
 
-    public function conversation(\stdClass $message){
+    public function conversation(\stdClass $message)
+    {
         $otherUser = $this->userRepository->findById($message->user);
 
         // save for history
@@ -89,7 +110,7 @@ class MessageHandler {
         // send to client
         $this->client->getConnection()->send(json_encode($conversationMessage));
 
-        if($otherUser->getClient()){
+        if ($otherUser->getClient()) {
             $otherClient = $otherUser->getClient();
             $conversationMessage->setUser($this->client->getUser());
             $otherClient->getConnection()->send(json_encode($conversationMessage));
@@ -98,9 +119,11 @@ class MessageHandler {
 
     /**
      * Handle a requestHistory message
+     *
      * @param \stdClass $message
      */
-    public function requestHistory(\stdClass $message){
+    public function requestHistory(\stdClass $message)
+    {
         // get other user
         $otherUser = $this->userRepository->findById($message->user);
         // get corresponding conversation
@@ -112,5 +135,24 @@ class MessageHandler {
         $conversationMessage->setContent($conversation->getContent());
         // send
         $this->client->getConnection()->send(json_encode($conversationMessage));
+    }
+
+    /**
+     * Broadcast the current user list to all clients
+     *
+     * @return void
+     */
+    public function broadCastUserList()
+    {
+        $clients = $this->clientRepository->findAll();
+        $this->userRepository->resortUsers();
+        /* @var $client Client */
+        foreach ($clients as $connection) {
+            $client = $clients[$connection];
+            $otherUsers = $this->userRepository->findAllWithout($client->getUser());
+            $userListMessage = new UserList();
+            $userListMessage->setContent($otherUsers);
+            $client->getConnection()->send(json_encode($userListMessage));
+        }
     }
 }

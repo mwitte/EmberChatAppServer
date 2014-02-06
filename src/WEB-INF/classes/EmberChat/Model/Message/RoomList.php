@@ -4,7 +4,7 @@ namespace EmberChat\Model\Message;
 
 use EmberChat\Model\Message;
 
-class UserList extends Message
+class RoomList extends Message
 {
 
     /**

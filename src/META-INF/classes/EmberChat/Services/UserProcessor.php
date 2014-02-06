@@ -8,15 +8,18 @@ namespace EmberChat\Services;
  * @package EmberChat
  * @Stateless
  */
-class UserProcessor extends AbstractProcessor {
+class UserProcessor extends AbstractProcessor
+{
 
     /**
      * Finds a single user by name
      *
      * @param string $name
+     *
      * @return null|object
      */
-    public function findByName($name) {
+    public function findByName($name)
+    {
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');
@@ -25,7 +28,8 @@ class UserProcessor extends AbstractProcessor {
         return $repository->findOneBy(array('name' => $name));
     }
 
-    public function findAll(){
+    public function findAll()
+    {
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');
@@ -38,9 +42,11 @@ class UserProcessor extends AbstractProcessor {
      * Finds a single user by name
      *
      * @param string $name
+     *
      * @return null|object
      */
-    public function findById($id) {
+    public function findById($id)
+    {
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');

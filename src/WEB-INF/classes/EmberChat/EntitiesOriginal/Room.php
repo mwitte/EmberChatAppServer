@@ -1,11 +1,11 @@
 <?php
 
-namespace EmberChat\Entities;
+namespace EmberChat\EntitiesOriginal;
 
 /**
- * @Entity @Table(name="user")
+ * @Entity @Table(name="room")
  */
-class User
+class Room
 {
 
 

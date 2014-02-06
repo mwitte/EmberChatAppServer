@@ -5,7 +5,8 @@ namespace EmberChat\Model\Message;
 use EmberChat\Model\Message;
 use EmberChat\Entities\User;
 
-class Conversation extends Message {
+class Conversation extends Message
+{
 
     /**
      * @var User

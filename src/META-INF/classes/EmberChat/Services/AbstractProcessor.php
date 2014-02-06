@@ -11,7 +11,8 @@ use TechDivision\ApplicationServer\Interfaces\ApplicationInterface;
 use EmberChat\Entities\User;
 
 
-class AbstractProcessor {
+class AbstractProcessor
+{
 
     /**
      * Datasource name to use.
@@ -197,8 +198,8 @@ class AbstractProcessor {
                 // initialize the connection parameters
                 $connectionParameters = array(
                     'driver' => $databaseNode->getDriver()
-                            ->getNodeValue()
-                            ->__toString()
+                        ->getNodeValue()
+                        ->__toString()
                     /*,
                     'user' => $databaseNode->getUser()
                         ->getNodeValue()
@@ -231,7 +232,8 @@ class AbstractProcessor {
      *
      * @return void
      */
-    public function createSchema() {
+    public function createSchema()
+    {
         // load the entity manager and the schema tool
         $entityManager = $this->getEntityManager();
         $tool = new SchemaTool($entityManager);

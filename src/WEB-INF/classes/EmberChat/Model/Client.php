@@ -6,14 +6,21 @@ use EmberChat\Model\Message\Settings;
 use EmberChat\Model\Message\UserList;
 use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
+use EmberChat\Repository\RoomRepository;
 use Ratchet\ConnectionInterface;
 
-class Client {
+class Client
+{
 
     /**
      * @var UserRepository
      */
     protected $userRepository;
+
+    /**
+     * @var RoomRepository
+     */
+    protected $roomRepository;
 
     /**
      * @var User
@@ -27,36 +34,40 @@ class Client {
 
     /**
      * @param ConnectionInterface $connection
+     * @param UserRepository      $userRepository
+     * @param RoomRepository      $roomRepository
      */
-    public function __construct(ConnectionInterface $connection, $userRepository) {
+    public function __construct(
+        ConnectionInterface $connection,
+        UserRepository $userRepository,
+        RoomRepository $roomRepository
+    ) {
         $this->userRepository = $userRepository;
+        $this->roomRepository = $roomRepository;
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);
         $this->sendSettings();
-        $this->sendUserList();
     }
 
-    protected function sendSettings(){
+    protected function sendSettings()
+    {
         $message = new Settings();
         $message->setUser($this->user);
+        $message->setRooms($this->roomRepository->findAll());
         $this->connection->send(json_encode($message));
     }
 
-    protected function sendUserList(){
-        $message = new UserList();
-        $message->setContent($this->userRepository->findAllWithout($this->user));
-        $this->connection->send(json_encode($message));
-    }
-
-    public function myDestruct(){
+    public function myDestruct()
+    {
         $this->user->unsetClient();
     }
 
     /**
      * @TODO This is not called, why?
      */
-    public function __destruct(){
+    public function __destruct()
+    {
         error_log('Client: __destruct');
     }
 

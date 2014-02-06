@@ -3,9 +3,9 @@
 namespace EmberChat\Entities;
 
 /**
- * @Entity @Table(name="user")
+ * @Entity @Table(name="room")
  */
-class User
+class Room
 {
 
 
