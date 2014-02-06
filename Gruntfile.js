@@ -6,15 +6,6 @@ var propertyMerger = new MergeBuildPropertiesClass('buildDefaultProperties.json'
 // LOAD AND MERGE BUILD PROPERTIES
 var buildProperties = propertyMerger.merge();
 
-// check if path to appshim got set
-if(buildProperties.app === "/path/to/your/appshim"){
-    console.error('\n\nYou have to specify the correct path to your appshim!\n');
-    console.info('Create a buildProperties.json and define the app dir.');
-    console.info('Look into the buildDefaultProperties.json for help.\n\n');
-    return;
-}
-
-
 module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
@@ -49,7 +40,8 @@ module.exports = function (grunt) {
                         '<%= buildProperties.deploydir %>'
                     ]
                 }]
-            }
+            },
+            tmp: '.tmp'
         },
         // Put files not handled in other tasks here
         copy: {
@@ -80,11 +72,46 @@ module.exports = function (grunt) {
                     src: '**/*'
                 }]
             }
+        },
+        curl: {
+            // downloads the app
+            app: {
+                src: '<%= buildProperties.appDistUrl %>',
+                dest: '.tmp/appdist.zip'
+            }
+        },
+        unzip: {
+            // unzips downloaded app dist package into dist
+            appdist: {
+                src: '.tmp/appdist.zip',
+                dest: '<%= buildProperties.dist %>',
+                router: function (filepath) {
+                    // remove directory
+                    return filepath.replace(buildProperties.appDistDir + '/', '');
+                }
+            }
+        }
+    });
+
+    /**
+     * Copy the app from set directory, if not found loads last build from github
+     */
+    grunt.registerTask('requireApp', function(target) {
+        var fs = require('fs');
+        if (fs.existsSync(buildProperties.app)) {
+            console.log('Got app from ' + buildProperties.app);
+            grunt.task.run('copy:app');
+        }else{
+            console.info('App not found under: ' + buildProperties.app);
+            console.info('You should specify the path to the app dist');
+            console.info('Create a build/buildProperties.json and define the app dir.');
+            console.info('Look into the buildDefaultProperties.json for help.');
+            console.log('Fallback: Load app from ' + buildProperties.appDistUrl);
+            grunt.task.run(['curl:app', 'unzip:appdist', 'clean:tmp']);
         }
     });
 
     grunt.registerTask('server', function (target) {
-
         grunt.task.run([
             'deploy',
             'watch'
@@ -94,7 +121,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'copy:src',
-        'copy:app'
+        'requireApp'
     ]);
 
     grunt.registerTask('deploy', [

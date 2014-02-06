@@ -1,6 +1,8 @@
 {
     "deploydir": "/opt/appserver/webapps/emberchat",
     "app": "/path/to/your/appshim",
+    "appDistUrl": "https://github.com/mwitte/EmberChat/archive/builds.zip",
+    "appDistDir": "EmberChat-builds",
     "dist": "dist",
     "src": "src"
 }
