@@ -4,6 +4,12 @@ namespace EmberChat\Repository;
 
 use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
 
+/**
+ * Class AbstractRepository
+ * @TODO Remove the persistence container
+ *
+ * @package EmberChat\Repository
+ */
 abstract class AbstractRepository
 {
 

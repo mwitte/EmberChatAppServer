@@ -35,15 +35,12 @@ class Client
     /**
      * @param ConnectionInterface $connection
      * @param UserRepository      $userRepository
-     * @param RoomRepository      $roomRepository
      */
     public function __construct(
         ConnectionInterface $connection,
-        UserRepository $userRepository,
-        RoomRepository $roomRepository
+        UserRepository $userRepository
     ) {
         $this->userRepository = $userRepository;
-        $this->roomRepository = $roomRepository;
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);
@@ -54,7 +51,6 @@ class Client
     {
         $message = new Settings();
         $message->setUser($this->user);
-        $message->setRooms($this->roomRepository->findAll());
         $this->connection->send(json_encode($message));
     }
 

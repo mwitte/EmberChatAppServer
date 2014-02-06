@@ -14,11 +14,6 @@ class Settings extends Message
     protected $user;
 
     /**
-     * @var array
-     */
-    protected $rooms;
-
-    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -32,22 +27,6 @@ class Settings extends Message
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * @param array $rooms
-     */
-    public function setRooms($rooms)
-    {
-        $this->rooms = $rooms;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRooms()
-    {
-        return $this->rooms;
     }
 
 

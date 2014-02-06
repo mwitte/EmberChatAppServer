@@ -16,11 +16,11 @@ grunt
 
 ### Development ###
 
-There is a `deploy` task and a watching deploy task `server`. Probably you need to add `--force` for overwriting
-external files.
+There is a `grunt deploy`task and a watching deploy task `grunt server`.
+Probably you need to add `--force` for overwriting external files.
 
-The appserver needs a restart after every change with root rights. For this purpose there is a separate node.js
-script you can use.
+The appserver needs a restart after every change with root rights. For this purpose there
+is a separate node.js script you can use.
 ```
 sudo node build/RestartListener.js
 ```

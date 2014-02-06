@@ -4,6 +4,7 @@ namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\Conversation as ConversationMessage;
+use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
 use EmberChat\Model\Conversation;
 use EmberChat\Repository\ClientRepository;
@@ -154,5 +155,20 @@ class MessageHandler
             $userListMessage->setContent($otherUsers);
             $client->getConnection()->send(json_encode($userListMessage));
         }
+    }
+
+    /**
+     * Send the current room list to all clients
+     *
+     * @param Client $client
+     *
+     * @return void
+     */
+    public function sendRoomList(Client $client)
+    {
+        $roomListMessage = new RoomList();
+        $roomListMessage->setContent($this->roomRepository->findAll());
+
+        $client->getConnection()->send(json_encode($roomListMessage));
     }
 }

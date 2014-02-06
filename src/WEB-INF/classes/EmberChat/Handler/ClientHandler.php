@@ -44,9 +44,10 @@ class ClientHandler
      */
     public function createNewClient(ConnectionInterface $connection)
     {
-        $client = new Client($connection, $this->userRepository, $this->roomRepository);
+        $client = new Client($connection, $this->userRepository);
         $this->clientRepository->addClient($client, $connection);
         $this->messageHandler->broadCastUserList();
+        $this->messageHandler->sendRoomList($client);
     }
 
     /**
