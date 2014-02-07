@@ -2,10 +2,10 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Model\Message;
+use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
 
-class Settings extends Message
+class Settings extends SendMessage
 {
 
     /**

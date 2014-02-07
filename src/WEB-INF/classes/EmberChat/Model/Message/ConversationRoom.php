@@ -3,9 +3,9 @@
 namespace EmberChat\Model\Message;
 
 use EmberChat\Entities\Room;
-use EmberChat\Model\Message;
+use EmberChat\Model\SendMessage;
 
-class ConversationRoom extends Message
+class ConversationRoom extends SendMessage
 {
 
     /**

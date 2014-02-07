@@ -7,6 +7,7 @@ use EmberChat\Model\Message\UserList;
 use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
 use EmberChat\Repository\RoomRepository;
+use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 class Client
@@ -34,13 +35,14 @@ class Client
 
     /**
      * @param ConnectionInterface $connection
-     * @param UserRepository      $userRepository
+     * @param ServiceLocator      $serviceLocator
      */
     public function __construct(
         ConnectionInterface $connection,
-        UserRepository $userRepository
+        ServiceLocator $serviceLocator
     ) {
-        $this->userRepository = $userRepository;
+        $this->serviceLocator = $serviceLocator;
+        $this->userRepository = $this->serviceLocator->getUserRepository();
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);

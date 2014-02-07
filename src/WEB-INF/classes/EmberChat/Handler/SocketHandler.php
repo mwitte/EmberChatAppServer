@@ -2,6 +2,7 @@
 
 namespace EmberChat\Handler;
 
+use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 use TechDivision\WebSocketContainer\Handlers\HandlerConfig;
 use TechDivision\WebSocketContainer\Handlers\AbstractHandler;
@@ -15,9 +16,15 @@ class SocketHandler extends AbstractHandler
      */
     protected $clientHandler;
 
+    /**
+     * @var ServiceLocator
+     */
+    protected $serviceLocator;
+
     public function __construct()
     {
-        $this->clientHandler = new ClientHandler();
+        $this->serviceLocator = new ServiceLocator();
+        $this->clientHandler = new ClientHandler($this->serviceLocator);
     }
 
     /**

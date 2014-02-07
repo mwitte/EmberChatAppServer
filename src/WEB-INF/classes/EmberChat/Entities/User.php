@@ -13,6 +13,29 @@ class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable
     protected $online = false;
     private $client = null;
 
+    /**
+     * @var array
+     */
+    protected $rooms;
+
+    public function joinRoom(Room $room)
+    {
+        $this->rooms[$room->getId()] = $room;
+    }
+
+    public function leaveRoom(Room $room)
+    {
+        unset($this->rooms[$room->getId()]);
+        if($room->containsUser($this)){
+            $room->removeUser($this);
+        }
+    }
+
+    public function isInRoom(Room $room)
+    {
+        return isset($this->rooms[$room->getId()]);
+    }
+
     public function unsetClient()
     {
         $this->client = null;

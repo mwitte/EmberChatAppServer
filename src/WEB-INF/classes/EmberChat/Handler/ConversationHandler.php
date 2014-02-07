@@ -8,10 +8,9 @@ use EmberChat\Model\Message\ConversationUser as ConversationUserMessage;
 use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
 use EmberChat\Model\Conversation;
-use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\ConversationRepository;
 use EmberChat\Repository\RoomRepository;
-use EmberChat\Repository\UserRepository;
+use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 /**
@@ -23,39 +22,16 @@ class ConversationHandler
 {
 
     /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
-     * @var ClientRepository
-     */
-    protected $clientRepository;
-
-    /**
-     * @var RoomRepository
-     */
-    protected $roomRepository;
-
-    /**
      * @var Client
      */
     protected $client;
 
     /**
-     * @var ConversationRepository
+     * @param ServiceLocator $serviceLocator
      */
-    protected $conversationRepository;
-
-    public function __construct(
-        UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        RoomRepository $roomRepository
-    ) {
-        $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
-        $this->roomRepository = $roomRepository;
-        $this->conversationRepository = new ConversationRepository();
+    public function __construct(ServiceLocator $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
     }
 
     /**
@@ -82,7 +58,7 @@ class ConversationHandler
     protected function roomConversation(Client $client, \stdClass $message)
     {
         error_log('roomConversation needs to get implemented');
-        $room = $this->roomRepository->findById($message->room);
+        $room = $this->serviceLocator->getRoomRepository()->findById($message->room);
         $conversationRoomMessage = new ConversationRoomMessage();
         $conversationRoomMessage->setRoom($room);
         $conversationRoomMessage->setContent(array(array('user' => 'Server', 'content' => 'No implemented yet!')));
@@ -97,9 +73,12 @@ class ConversationHandler
      */
     protected function userConversation(Client $client, \stdClass $message)
     {
-        $otherUser = $this->userRepository->findById($message->user);
+        $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
         // save for history
-        $conversation = $this->conversationRepository->findConversationByUserPair($client->getUser(), $otherUser);
+        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
+            $client->getUser(),
+            $otherUser
+        );
         $conversation->appendContent($client->getUser(), $message->content);
 
         $tempConversation = new Conversation();

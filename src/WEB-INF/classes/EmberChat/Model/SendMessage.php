@@ -2,7 +2,7 @@
 
 namespace EmberChat\Model;
 
-abstract class Message implements \JsonSerializable
+abstract class SendMessage implements \JsonSerializable
 {
 
     /**

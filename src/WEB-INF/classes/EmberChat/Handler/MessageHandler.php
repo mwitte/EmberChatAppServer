@@ -11,6 +11,7 @@ use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\ConversationRepository;
 use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
+use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 /**
@@ -39,21 +40,19 @@ class MessageHandler
     protected $roomRepository;
 
     /**
-     * @var ConversationRepository
+     * @var ServiceLocator
      */
-    protected $conversationRepository;
+    protected $serviceLocator;
 
-    public function __construct(ClientRepository $clientRepository, UserRepository $userRepository)
+    /**
+     * @param ServiceLocator $serviceLocator
+     */
+    public function __construct(ServiceLocator $serviceLocator)
     {
-        $this->clientRepository = $clientRepository;
-        $this->userRepository = $userRepository;
-        $this->roomRepository = new RoomRepository();
-        $this->conversationRepository = new ConversationRepository();
-        $this->conversationHandler = new ConversationHandler(
-            $this->userRepository,
-            $this->clientRepository,
-            $this->roomRepository
-        );
+        $this->serviceLocator = $serviceLocator;
+        $this->clientRepository = $this->serviceLocator->getClientRepository();
+        $this->userRepository = $this->serviceLocator->getUserRepository();
+        $this->roomRepository = $this->serviceLocator->getRoomRepository();
     }
 
     /**
@@ -69,7 +68,8 @@ class MessageHandler
                 $this->requestHistory($client, $message);
                 break;
             case 'message':
-                $this->conversationHandler->processMessage($client, $message);
+                $conversationHandler = new ConversationHandler($this->serviceLocator);
+                $conversationHandler->processMessage($client, $message);
                 break;
             default:
                 error_log('Unkown message type: ');
@@ -88,7 +88,10 @@ class MessageHandler
         // get other user
         $otherUser = $this->userRepository->findById($message->user);
         // get corresponding conversation
-        $conversation = $this->conversationRepository->findConversationByUserPair($client->getUser(), $otherUser);
+        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
+            $client->getUser(),
+            $otherUser
+        );
 
         // build message
         $conversationUserMessage = new ConversationUserMessage();

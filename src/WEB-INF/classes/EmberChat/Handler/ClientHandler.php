@@ -5,6 +5,7 @@ namespace EmberChat\Handler;
 use EmberChat\Model\Client;
 use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\UserRepository;
+use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 class ClientHandler
@@ -16,15 +17,18 @@ class ClientHandler
     protected $clientRepository;
 
     /**
-     * @var UserRepository
+     * @var ServiceLocator
      */
-    protected $userRepository;
+    protected $serviceLocator;
 
-    public function __construct()
+    /**
+     * @param ServiceLocator $serviceLocator
+     */
+    public function __construct(ServiceLocator $serviceLocator)
     {
-        $this->clientRepository = new ClientRepository();
-        $this->userRepository = new UserRepository();
-        $this->messageHandler = new MessageHandler($this->clientRepository, $this->userRepository);
+        $this->serviceLocator = $serviceLocator;
+        $this->clientRepository = $serviceLocator->getClientRepository();
+        $this->messageHandler = new MessageHandler($this->serviceLocator);
     }
 
     /**
@@ -34,7 +38,7 @@ class ClientHandler
      */
     public function createNewClient(ConnectionInterface $connection)
     {
-        $client = new Client($connection, $this->userRepository);
+        $client = new Client($connection, $this->serviceLocator);
         $this->clientRepository->addClient($client, $connection);
         $this->messageHandler->broadCastUserList();
         $this->messageHandler->sendRoomList($client);

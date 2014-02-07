@@ -2,9 +2,9 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Model\Message;
+use EmberChat\Model\SendMessage;
 
-class UserList extends Message
+class UserList extends SendMessage
 {
 
     /**
