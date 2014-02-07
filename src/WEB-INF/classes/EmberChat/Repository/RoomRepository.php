@@ -2,7 +2,7 @@
 
 namespace EmberChat\Repository;
 
-use EmberChat\Entities\User;
+use EmberChat\Entities\Room;
 
 class RoomRepository extends AbstractRepository
 {
@@ -26,5 +26,19 @@ class RoomRepository extends AbstractRepository
     public function findAll()
     {
         return $this->rooms;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Room
+     */
+    public function findById($id)
+    {
+        foreach ($this->rooms as $room) {
+            if ($room->getId() == $id) {
+                return $room;
+            }
+        }
     }
 }
