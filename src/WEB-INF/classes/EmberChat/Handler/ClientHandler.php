@@ -4,7 +4,6 @@ namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
 use EmberChat\Repository\ClientRepository;
-use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
 use Ratchet\ConnectionInterface;
 
@@ -21,20 +20,11 @@ class ClientHandler
      */
     protected $userRepository;
 
-    /**
-     * @var RoomRepository
-     */
-    protected $roomRepository;
-
     public function __construct()
     {
         $this->clientRepository = new ClientRepository();
         $this->userRepository = new UserRepository();
-        $this->messageHandler = new MessageHandler();
-        $this->roomRepository = new RoomRepository();
-        $this->messageHandler->setUserRepository($this->userRepository);
-        $this->messageHandler->setClientRepository($this->clientRepository);
-        $this->messageHandler->setRoomRepository($this->roomRepository);
+        $this->messageHandler = new MessageHandler($this->clientRepository, $this->userRepository);
     }
 
     /**

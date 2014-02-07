@@ -3,7 +3,6 @@
 namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
-use EmberChat\Model\Message\ConversationRoom as ConversationRoomMessage;
 use EmberChat\Model\Message\ConversationUser as ConversationUserMessage;
 use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
@@ -40,42 +39,21 @@ class MessageHandler
     protected $roomRepository;
 
     /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
      * @var ConversationRepository
      */
     protected $conversationRepository;
 
-    public function __construct()
-    {
-        $this->conversationRepository = new ConversationRepository();
-    }
-
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function setUserRepository(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
-    /**
-     * @param ClientRepository $clientRepository
-     */
-    public function setClientRepository(ClientRepository $clientRepository)
+    public function __construct(ClientRepository $clientRepository, UserRepository $userRepository)
     {
         $this->clientRepository = $clientRepository;
-    }
-
-    /**
-     * @param RoomRepository $roomRepository
-     */
-    public function setRoomRepository(RoomRepository $roomRepository)
-    {
-        $this->roomRepository = $roomRepository;
+        $this->userRepository = $userRepository;
+        $this->roomRepository = new RoomRepository();
+        $this->conversationRepository = new ConversationRepository();
+        $this->conversationHandler = new ConversationHandler(
+            $this->userRepository,
+            $this->clientRepository,
+            $this->roomRepository
+        );
     }
 
     /**
@@ -84,15 +62,14 @@ class MessageHandler
      */
     public function processMessage(Client $client, $rawMessage)
     {
-        $this->client = $client;
         $message = json_decode($rawMessage);
 
         switch ($message->type) {
             case 'requestHistory':
-                $this->requestHistory($message);
+                $this->requestHistory($client, $message);
                 break;
             case 'message':
-                $this->conversation($message);
+                $this->conversationHandler->processMessage($client, $message);
                 break;
             default:
                 error_log('Unkown message type: ');
@@ -101,81 +78,24 @@ class MessageHandler
     }
 
     /**
-     * Process a conversation message
-     *
-     * @param \stdClass $message
-     */
-    public function conversation(\stdClass $message)
-    {
-        if ($message->user) {
-            $this->userConversation($message);
-        } else {
-            $this->roomConversation($message);
-        }
-    }
-
-    /**
-     * Process a roomConversation message
-     *
-     * @param \stdClass $message
-     */
-    protected function roomConversation(\stdClass $message)
-    {
-        error_log('Tried to handle a conversation message which not findable User');
-        $room = $this->roomRepository->findById($message->room);
-        $conversationRoomMessage = new ConversationRoomMessage();
-        $conversationRoomMessage->setRoom($room);
-        $conversationRoomMessage->setContent(array(array('user' => 'Server', 'content' => 'No implemented yet!')));
-        $this->client->getConnection()->send(json_encode($conversationRoomMessage));
-    }
-
-    /**
-     * Process a userConversation message
-     *
-     * @param \stdClass $message
-     */
-    protected function userConversation(\stdClass $message)
-    {
-        $otherUser = $this->userRepository->findById($message->user);
-        // save for history
-        $conversation = $this->conversationRepository->findConversationByUserPair($this->client->getUser(), $otherUser);
-        $conversation->appendContent($this->client->getUser(), $message->content);
-
-        $tempConversation = new Conversation();
-        $tempConversation->appendContent($this->client->getUser(), $message->content);
-
-        // build message
-        $conversationUserMessage = new ConversationUserMessage();
-        $conversationUserMessage->setUser($otherUser);
-        $conversationUserMessage->setContent($tempConversation->getContent());
-        // send to client
-        $this->client->getConnection()->send(json_encode($conversationUserMessage));
-
-        if ($otherUser->getClient()) {
-            $otherClient = $otherUser->getClient();
-            $conversationUserMessage->setUser($this->client->getUser());
-            $otherClient->getConnection()->send(json_encode($conversationUserMessage));
-        }
-    }
-
-    /**
      * Handle a requestHistory message
      *
+     * @param Client    $client
      * @param \stdClass $message
      */
-    public function requestHistory(\stdClass $message)
+    public function requestHistory(Client $client, \stdClass $message)
     {
         // get other user
         $otherUser = $this->userRepository->findById($message->user);
         // get corresponding conversation
-        $conversation = $this->conversationRepository->findConversationByUserPair($this->client->getUser(), $otherUser);
+        $conversation = $this->conversationRepository->findConversationByUserPair($client->getUser(), $otherUser);
 
         // build message
         $conversationUserMessage = new ConversationUserMessage();
         $conversationUserMessage->setUser($otherUser);
         $conversationUserMessage->setContent($conversation->getContent());
         // send
-        $this->client->getConnection()->send(json_encode($conversationUserMessage));
+        $client->getConnection()->send(json_encode($conversationUserMessage));
     }
 
     /**
