@@ -3,9 +3,12 @@
 namespace EmberChat\Model\Message;
 
 use EmberChat\Entities\Room;
+use EmberChat\Handler\MessageSender;
+use EmberChat\Model\Conversation;
 use EmberChat\Model\SendMessage;
+use EmberChat\Entities\User;
 
-class ConversationRoom extends SendMessage
+class RoomConversation extends SendMessage
 {
 
     /**
@@ -18,36 +21,38 @@ class ConversationRoom extends SendMessage
      */
     protected $content;
 
+
     /**
-     * @param Room $room
+     * Creates and sends the message
+     *
+     * @param User           $sender
+     * @param Room           $room
+     * @param                $content
      */
-    public function setRoom(Room $room)
+    public function __construct(User $sender, Room $room, $content)
     {
+        parent::__construct();
+
         $this->room = $room;
+        $this->content = $this->buildMessageContent($sender, $content);
+
+        $messageSender = new MessageSender();
+        $messageSender->broadCastMessageForUsers($this, $room->getUsers());
+        unset($this);
     }
 
     /**
-     * @return Room
-     */
-    public function getRoom()
-    {
-        return $this->room;
-    }
-
-
-    /**
-     * @param array $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    /**
+     * Builds the content for this message
+     *
+     * @param User $user
+     * @param      $content
+     *
      * @return array
      */
-    public function getContent()
+    protected function buildMessageContent(User $user, $content)
     {
-        return $this->content;
+        $tempConversation = new Conversation();
+        $tempConversation->appendContent($user, $content);
+        return $tempConversation->getContent();
     }
 }

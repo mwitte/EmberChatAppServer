@@ -3,11 +3,9 @@
 namespace EmberChat\Model\Message;
 
 use EmberChat\Handler\MessageSender;
-use EmberChat\Model\Client;
 use EmberChat\Model\Conversation;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
-use EmberChat\Service\ServiceLocator;
 
 class UserConversation extends SendMessage
 {
@@ -29,12 +27,10 @@ class UserConversation extends SendMessage
      * @param User           $sender
      * @param User           $receiver
      * @param                $content
-     * @param ServiceLocator $serviceLocator
      */
-    public function __construct(User $sender, User $receiver, $content, ServiceLocator $serviceLocator)
+    public function __construct(User $sender, User $receiver, $content)
     {
         parent::__construct();
-        $this->appendConversation($sender, $receiver, $content, $serviceLocator);
 
         $this->content = $this->buildMessageContent($sender, $content);
         $this->user = $receiver;
@@ -47,22 +43,6 @@ class UserConversation extends SendMessage
             $messageSender->sendMessageForUser($this, $receiver);
         }
         unset($this);
-    }
-
-    /**
-     * Append the existing conversation object with new content
-     *
-     * @param User           $sender
-     * @param User           $receiver
-     * @param                $content
-     * @param ServiceLocator $serviceLocator
-     */
-    protected function appendConversation(User $sender, User $receiver, $content, ServiceLocator $serviceLocator){
-        $conversation = $serviceLocator->getConversationRepository()->findConversationByUserPair(
-            $sender,
-            $receiver
-        );
-        $conversation->appendContent($sender, $content);
     }
 
     /**

@@ -21,6 +21,7 @@ class Settings extends SendMessage
      */
     public function __construct(Client $client)
     {
+        parent::__construct();
         $this->user = $client->getUser();
         $messageSender = new MessageSender();
         $messageSender->sendMessageForClient($this, $client);

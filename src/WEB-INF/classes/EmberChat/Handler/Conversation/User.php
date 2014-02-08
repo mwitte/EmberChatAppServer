@@ -33,7 +33,14 @@ class User extends \EmberChat\Handler\Conversation
     public function newMessage(Client $client, \stdClass $message)
     {
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
-        new UserConversation($client->getUser(), $otherUser, $message->content, $this->serviceLocator);
+
+        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
+            $client->getUser(),
+            $otherUser
+        );
+        $conversation->appendContent($client->getUser(), $message->content);
+
+        new UserConversation($client->getUser(), $otherUser, $message->content);
     }
 
     /**

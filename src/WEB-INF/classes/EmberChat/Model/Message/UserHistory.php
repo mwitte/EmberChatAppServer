@@ -12,7 +12,12 @@ use EmberChat\Service\ServiceLocator;
 class UserHistory extends SendMessage
 {
 
-    protected $type = 'ConversationUser';
+    /**
+     * Overwrite type to get on client side same purpose like regular conversation
+     *
+     * @var string
+     */
+    protected $type = 'UserConversation';
 
     /**
      * @var User
@@ -24,6 +29,11 @@ class UserHistory extends SendMessage
      */
     protected $content;
 
+    /**
+     * @param Client         $client
+     * @param User           $receiver
+     * @param ServiceLocator $serviceLocator
+     */
     public function __construct(Client $client, User $receiver, ServiceLocator $serviceLocator)
     {
         //parent::__construct();

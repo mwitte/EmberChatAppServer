@@ -4,17 +4,11 @@ namespace EmberChat\Handler;
 
 use EmberChat\Entities\User;
 use EmberChat\Model\Client;
-use EmberChat\Repository\ClientRepository;
-use EmberChat\Repository\ConversationRepository;
-use EmberChat\Repository\RoomRepository;
-use EmberChat\Repository\UserRepository;
-use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 /**
  * Class MessageHandler
  *
- * @TODO    this needs abstraction and separate handlers for each case!
  *
  * @package EmberChat\Handler
  */

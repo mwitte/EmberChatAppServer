@@ -3,19 +3,11 @@
 namespace EmberChat\Handler\Conversation;
 
 use EmberChat\Entities\User;
-use EmberChat\Handler\MessageHandler;
 use EmberChat\Model\Client;
-use EmberChat\Model\Message\ConversationRoom as ConversationRoomMessage;
-use EmberChat\Model\Message\ConversationRoom;
-use EmberChat\Model\Message\ConversationUser as ConversationUserMessage;
-use EmberChat\Model\Message\RoomList;
-use EmberChat\Model\Message\UserList;
-use EmberChat\Model\Conversation;
-use EmberChat\Repository\ConversationRepository;
-use EmberChat\Repository\RoomRepository;
-use EmberChat\Service\ServiceLocator;
+use EmberChat\Model\Message\RoomConversation;
+use EmberChat\Model\Message\RoomJoin;
+use EmberChat\Model\Message\RoomLeave;
 use Ratchet\ConnectionInterface;
-use Ratchet\WebSocket\Version\RFC6455\Message;
 
 /**
  * Class Room
@@ -36,40 +28,66 @@ class Room extends \EmberChat\Handler\Conversation
      * @param Client    $client
      * @param \stdClass $message
      */
-    public function processMessage(Client $client, \stdClass $message)
+    public function newMessage(Client $client, \stdClass $message)
     {
+        $room = $this->serviceLocator->getRoomRepository()->findById($message->room);
+        if (!$room) {
+            error_log('WARING: Could not find room ' . $message->room);
+        }
+        new RoomConversation($client->getUser(), $room, $message->content);
+    }
 
-        error_log('roomConversation needs to get implemented');
+    /**
+     * Client joins room
+     *
+     * @param Client    $client
+     * @param \stdClass $message
+     */
+    public function joinUser(Client $client, \stdClass $message)
+    {
         $room = $this->serviceLocator->getRoomRepository()->findById($message->room);
 
-        $this->broadCastMessage($message, $room, $client);
-        return;
-
-        $conversationRoomMessage = new ConversationRoomMessage();
-        $conversationRoomMessage->setRoom($room);
-        $conversationRoomMessage->setContent(array(array('user' => 'Server', 'content' => 'No implemented yet!')));
-        $client->getConnection()->send(json_encode($conversationRoomMessage));
-    }
-
-
-    protected function broadCastMessage(\stdClass $message, \EmberChat\Entities\Room $room, Client $client)
-    {
-        $roomMessage = new ConversationRoomMessage();
-        $roomMessage->setContent(array('user' => $client->getUser()->getName(), 'content'=> $message->content));
-        $roomMessage->setRoom($room);
-        $messageHandler = new MessageHandler($this->serviceLocator);
-        $clients = array();
-        foreach($room->getUsers() as $user){
-            if($user->getClient()){
-                $clients[] = $user->getClient();
-            }
+        if (!$room) {
+            error_log('WARING: Room with id ' . $message->room . ' not found!');
+            return;
         }
-        $messageHandler->broadCastMessage($roomMessage, $clients);
+        if (!$room->addUser($client->getUser())) {
+            error_log('WARING: Could not add user ' . $client->getUser()->getName() . ' to room ' . $room->getName());
+            return;
+        }
+        if (!$client->getUser()->joinRoom($room)) {
+            error_log('WARING: Could not add room ' . $room->getName() . ' to user ' . $client->getUser()->getName());
+            $room->removeUser($client->getUser());
+            return;
+        }
+        new RoomJoin($client->getUser(), $room);
     }
 
-    public function joinUser(\EmberChat\Entities\Room $room, User $user)
+    /**
+     * Client leaves room
+     *
+     * @param Client    $client
+     * @param \stdClass $message
+     */
+    public function leaveUser(Client $client, \stdClass $message)
     {
+        $room = $this->serviceLocator->getRoomRepository()->findById($message->room);
 
+        if (!$room) {
+            error_log('WARING: Room with id ' . $message->room . ' not found!');
+            return;
+        }
+        if (!$room->removeUser($client->getUser())) {
+            error_log(
+                'WARING: Could not remove user ' . $client->getUser()->getName() . ' of room ' . $room->getName()
+            );
+        }
+        if (!$client->getUser()->leaveRoom($room)) {
+            error_log(
+                'WARING: Could not remove room ' . $room->getName() . ' of user ' . $client->getUser()->getName()
+            );
+        }
+        new RoomLeave($client->getUser(), $room);
     }
 
 }

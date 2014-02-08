@@ -3,7 +3,6 @@
 namespace EmberChat\Model;
 
 use EmberChat\Model\Message\Settings;
-use EmberChat\Model\Message\UserList;
 use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
 use EmberChat\Repository\RoomRepository;
@@ -46,7 +45,7 @@ class Client
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);
-        $settingsMsg = new Settings($this);
+        new Settings($this);
     }
 
     public function myDestruct()

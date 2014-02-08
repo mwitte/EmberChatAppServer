@@ -2,8 +2,8 @@
 
 namespace EmberChat\Handler;
 
-use EmberChat\Handler\Conversation\Room as RoomConversationHandler;
-use EmberChat\Handler\Conversation\User as UserConversationHandler;
+use EmberChat\Handler\Conversation\Room;
+use EmberChat\Handler\Conversation\User;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
@@ -15,7 +15,6 @@ use Ratchet\ConnectionInterface;
 /**
  * Class MessageHandler
  *
- * @TODO    this needs abstraction and separate handlers for each case!
  *
  * @package EmberChat\Handler
  */
@@ -55,22 +54,30 @@ class MessageReceiver
     {
         $message = json_decode($rawMessage);
 
+        /**
+         * @TODO this is awful
+         */
         switch ($message->type) {
             case 'requestHistory':
-                $conversationHandler = new UserConversationHandler($this->serviceLocator);
+                $conversationHandler = new User($this->serviceLocator);
                 $conversationHandler->requestHistory($client, $message);
                 break;
             case 'message':
                 if ($message->user) {
-                    $conversationHandler = new UserConversationHandler($this->serviceLocator);
+                    $conversationHandler = new User($this->serviceLocator);
                     $conversationHandler->newMessage($client, $message);
                 } else {
-                    $conversationHandler = new RoomConversationHandler($this->serviceLocator);
-                    $conversationHandler->processMessage($client, $message);
+                    $conversationHandler = new Room($this->serviceLocator);
+                    $conversationHandler->newMessage($client, $message);
                 }
                 break;
             case 'RoomJoin':
-
+                $conversationHandler = new Room($this->serviceLocator);
+                $conversationHandler->joinUser($client, $message);
+                break;
+            case 'RoomLeave':
+                $conversationHandler = new Room($this->serviceLocator);
+                $conversationHandler->leaveUser($client, $message);
                 break;
             default:
                 error_log('Unkown message type: ');
