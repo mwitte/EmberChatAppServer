@@ -24,4 +24,9 @@ class Conversation
     {
         $this->content[] = array("user" => $user->getName(), "content" => $line);
     }
+
+    public function sendMessage()
+    {
+
+    }
 }

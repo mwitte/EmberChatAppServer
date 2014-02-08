@@ -28,7 +28,7 @@ class ClientHandler
     {
         $this->serviceLocator = $serviceLocator;
         $this->clientRepository = $serviceLocator->getClientRepository();
-        $this->messageHandler = new MessageHandler($this->serviceLocator);
+        $this->messageReceiver = new MessageReceiver($this->serviceLocator);
     }
 
     /**
@@ -40,8 +40,8 @@ class ClientHandler
     {
         $client = new Client($connection, $this->serviceLocator);
         $this->clientRepository->addClient($client, $connection);
-        $this->messageHandler->broadCastUserList();
-        $this->messageHandler->sendRoomList($client);
+        $this->messageReceiver->broadCastUserList();
+        $this->messageReceiver->sendRoomList($client);
     }
 
     /**
@@ -52,7 +52,7 @@ class ClientHandler
     public function unsetClient(ConnectionInterface $connection)
     {
         $this->clientRepository->removeClient($connection);
-        $this->messageHandler->broadCastUserList();
+        $this->messageReceiver->broadCastUserList();
     }
 
     /**
@@ -61,7 +61,7 @@ class ClientHandler
      */
     public function messageFromClient(ConnectionInterface $connection, $message)
     {
-        $this->messageHandler->processMessage($this->clientRepository->findClientByConnection($connection), $message);
+        $this->messageReceiver->processMessage($this->clientRepository->findClientByConnection($connection), $message);
     }
 
 

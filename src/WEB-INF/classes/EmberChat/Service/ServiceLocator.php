@@ -2,14 +2,17 @@
 
 namespace EmberChat\Service;
 
-/*
- * Contains all Instances which should be constructed only once
- */
 use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\ConversationRepository;
 use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
 
+/**
+ * Class ServiceLocator
+ * Will get replaced by a dependency injection framework in future
+ *
+ * @package EmberChat\Service
+ */
 class ServiceLocator
 {
 
@@ -35,7 +38,7 @@ class ServiceLocator
 
     public function __construct()
     {
-        //@TODO remove this
+        // this hole service locator will get removed in future
         $this->userRepository = new UserRepository();
         $this->clientRepository = new  ClientRepository();
         $this->roomRepository = new RoomRepository();

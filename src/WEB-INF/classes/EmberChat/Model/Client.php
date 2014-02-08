@@ -46,14 +46,7 @@ class Client
         $this->connection = $connection;
         $this->user = $this->userRepository->getOfflineUser();
         $this->user->setClient($this);
-        $this->sendSettings();
-    }
-
-    protected function sendSettings()
-    {
-        $message = new Settings();
-        $message->setUser($this->user);
-        $this->connection->send(json_encode($message));
+        $settingsMsg = new Settings($this);
     }
 
     public function myDestruct()

@@ -2,6 +2,8 @@
 
 namespace EmberChat\Model\Message;
 
+use EmberChat\Handler\MessageSender;
+use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
 
@@ -13,21 +15,16 @@ class Settings extends SendMessage
      */
     protected $user;
 
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
-     * @return User
+     * @param Client $client
      */
-    public function getUser()
+    public function __construct(Client $client)
     {
-        return $this->user;
+        $this->user = $client->getUser();
+        $messageSender = new MessageSender();
+        $messageSender->sendMessageForClient($this, $client);
+        unset($this);
     }
-
 
 }

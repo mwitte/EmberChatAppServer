@@ -7,8 +7,14 @@ use EmberChat\Model\Client;
 /**
  * @Entity @Table(name="user")
  */
-class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable
+class User extends \EmberChat\EntitiesOriginal\User
 {
+
+    protected $jsonProperties = array(
+        'name',
+        'id',
+        'online'
+    );
 
     protected $online = false;
     private $client = null;
@@ -59,8 +65,5 @@ class User extends \EmberChat\EntitiesOriginal\User implements \JsonSerializable
         return $this->client;
     }
 
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
-    }
+
 }

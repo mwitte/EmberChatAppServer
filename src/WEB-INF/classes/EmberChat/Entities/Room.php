@@ -2,16 +2,24 @@
 
 namespace EmberChat\Entities;
 
+use EmberChat\Handler\Conversation;
+
 /**
  * @Entity @Table(name="room")
  */
-class Room extends \EmberChat\EntitiesOriginal\Room implements \JsonSerializable
+class Room extends \EmberChat\EntitiesOriginal\Room
 {
+
+    protected $jsonProperties = array(
+        'name',
+        'id',
+        'users'
+    );
 
     /**
      * @var array
      */
-    protected $users;
+    protected $users = array();
 
     /**
      * @return array
@@ -45,8 +53,4 @@ class Room extends \EmberChat\EntitiesOriginal\Room implements \JsonSerializable
         return isset($this->users[$user->getId()]);
     }
 
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
-    }
 }

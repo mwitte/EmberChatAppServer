@@ -2,14 +2,12 @@
 
 namespace EmberChat\Handler;
 
+use EmberChat\Handler\Conversation\Room as RoomConversationHandler;
+use EmberChat\Handler\Conversation\User as UserConversationHandler;
 use EmberChat\Model\Client;
-use EmberChat\Model\Message\ConversationUser as ConversationUserMessage;
 use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
-use EmberChat\Model\Conversation;
 use EmberChat\Repository\ClientRepository;
-use EmberChat\Repository\ConversationRepository;
-use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
 use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
@@ -21,7 +19,7 @@ use Ratchet\ConnectionInterface;
  *
  * @package EmberChat\Handler
  */
-class MessageHandler
+class MessageReceiver
 {
 
     /**
@@ -33,11 +31,6 @@ class MessageHandler
      * @var ClientRepository
      */
     protected $clientRepository;
-
-    /**
-     * @var RoomRepository
-     */
-    protected $roomRepository;
 
     /**
      * @var ServiceLocator
@@ -52,7 +45,6 @@ class MessageHandler
         $this->serviceLocator = $serviceLocator;
         $this->clientRepository = $this->serviceLocator->getClientRepository();
         $this->userRepository = $this->serviceLocator->getUserRepository();
-        $this->roomRepository = $this->serviceLocator->getRoomRepository();
     }
 
     /**
@@ -65,11 +57,20 @@ class MessageHandler
 
         switch ($message->type) {
             case 'requestHistory':
-                $this->requestHistory($client, $message);
+                $conversationHandler = new UserConversationHandler($this->serviceLocator);
+                $conversationHandler->requestHistory($client, $message);
                 break;
             case 'message':
-                $conversationHandler = new ConversationHandler($this->serviceLocator);
-                $conversationHandler->processMessage($client, $message);
+                if ($message->user) {
+                    $conversationHandler = new UserConversationHandler($this->serviceLocator);
+                    $conversationHandler->newMessage($client, $message);
+                } else {
+                    $conversationHandler = new RoomConversationHandler($this->serviceLocator);
+                    $conversationHandler->processMessage($client, $message);
+                }
+                break;
+            case 'RoomJoin':
+
                 break;
             default:
                 error_log('Unkown message type: ');
@@ -77,29 +78,6 @@ class MessageHandler
         }
     }
 
-    /**
-     * Handle a requestHistory message
-     *
-     * @param Client    $client
-     * @param \stdClass $message
-     */
-    public function requestHistory(Client $client, \stdClass $message)
-    {
-        // get other user
-        $otherUser = $this->userRepository->findById($message->user);
-        // get corresponding conversation
-        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
-            $client->getUser(),
-            $otherUser
-        );
-
-        // build message
-        $conversationUserMessage = new ConversationUserMessage();
-        $conversationUserMessage->setUser($otherUser);
-        $conversationUserMessage->setContent($conversation->getContent());
-        // send
-        $client->getConnection()->send(json_encode($conversationUserMessage));
-    }
 
     /**
      * Broadcast the current user list to all clients
@@ -113,10 +91,7 @@ class MessageHandler
         /* @var $client Client */
         foreach ($clients as $connection) {
             $client = $clients[$connection];
-            $otherUsers = $this->userRepository->findAllWithout($client->getUser());
-            $userListMessage = new UserList();
-            $userListMessage->setContent($otherUsers);
-            $client->getConnection()->send(json_encode($userListMessage));
+            new UserList($client, $this->serviceLocator);
         }
     }
 
@@ -129,9 +104,7 @@ class MessageHandler
      */
     public function sendRoomList(Client $client)
     {
-        $roomListMessage = new RoomList();
-        $roomListMessage->setContent($this->roomRepository->findAll());
-
-        $client->getConnection()->send(json_encode($roomListMessage));
+        new RoomList($client, $this->serviceLocator);
     }
+
 }

@@ -5,7 +5,7 @@ namespace EmberChat\EntitiesOriginal;
 /**
  * @Entity @Table(name="user")
  */
-class User
+class User extends AbstractEntity
 {
 
 

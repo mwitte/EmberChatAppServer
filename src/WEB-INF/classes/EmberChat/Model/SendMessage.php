@@ -2,6 +2,10 @@
 
 namespace EmberChat\Model;
 
+use EmberChat\Handler\MessageSender;
+use EmberChat\Service\ServiceLocator;
+
+
 abstract class SendMessage implements \JsonSerializable
 {
 
