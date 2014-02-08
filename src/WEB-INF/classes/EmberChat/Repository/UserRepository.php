@@ -30,11 +30,35 @@ class UserRepository extends AbstractRepository
      */
     public function findById($id)
     {
+        /** @var User $user */
         foreach ($this->users as $user) {
-            if ($user->getId() == $id) {
+            if ($user->getId() === $id) {
                 return $user;
             }
         }
+        return null;
+    }
+
+    public function findByAuth($auth)
+    {
+        /** @var User $user */
+        foreach ($this->users as $user) {
+            if ($user->getAuth() === $auth) {
+                return $user;
+            }
+        }
+        return null;
+    }
+
+    public function findByToken($token)
+    {
+        /** @var User $user */
+        foreach ($this->users as $user) {
+            if ($user->getToken() === $token) {
+                return $user;
+            }
+        }
+        return null;
     }
 
     public function findAllWithout(User $user)
@@ -54,7 +78,7 @@ class UserRepository extends AbstractRepository
     public function getOfflineUser()
     {
         foreach ($this->users as &$user) {
-            if (!$user->getClient()) {
+            if (count($user->getClients()) <= 0) {
                 return $user;
             }
         }
@@ -80,10 +104,10 @@ class UserRepository extends AbstractRepository
      */
     static function cmpClientState($a, $b)
     {
-        if ((bool)$a->getClient() == (bool)$b->getClient()) {
+        if ((bool)count($a->getClients()) == count((bool)$b->getClients())) {
             return 0;
         }
-        return ($b->getClient()) ? +1 : -1;
+        return (count($b->getClients())) ? +1 : -1;
     }
 
     /**

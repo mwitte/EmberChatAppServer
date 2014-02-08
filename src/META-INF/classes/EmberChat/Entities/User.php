@@ -22,6 +22,18 @@ class User
     protected $name;
 
     /**
+     * @Column(type="string")
+     * @var string
+     */
+    protected $auth;
+
+    /**
+     * @Column(type="string")
+     * @var string
+     */
+    protected $password;
+
+    /**
      * @param string $id
      */
     public function setId($id)
@@ -52,4 +64,29 @@ class User
     {
         return $this->name;
     }
+
+    /**
+     * @param string $auth
+     */
+    public function setAuth($auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuth()
+    {
+        return $this->auth;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
 }

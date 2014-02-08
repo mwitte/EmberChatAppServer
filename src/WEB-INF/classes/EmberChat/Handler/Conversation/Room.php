@@ -2,7 +2,7 @@
 
 namespace EmberChat\Handler\Conversation;
 
-use EmberChat\Entities\User;
+use EmberChat\Entities\User as UserEntity;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\RoomConversation;
 use EmberChat\Model\Message\RoomJoin;

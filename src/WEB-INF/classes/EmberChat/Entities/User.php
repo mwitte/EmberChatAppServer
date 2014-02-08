@@ -34,7 +34,7 @@ class User extends \EmberChat\EntitiesOriginal\User
      *
      * @var Client
      */
-    private $client = null;
+    private $clients = array();
 
     /**
      * Rooms the user currently listens
@@ -46,18 +46,18 @@ class User extends \EmberChat\EntitiesOriginal\User
     /**
      * @param Client $client
      */
-    public function setClient(Client $client)
+    public function addClient(Client $client)
     {
-        $this->client = $client;
+        $this->clients[] = $client;
         $this->online = true;
     }
 
     /**
      * @return Client
      */
-    public function getClient()
+    public function getClients()
     {
-        return $this->client;
+        return $this->clients;
     }
 
     /**
@@ -98,15 +98,23 @@ class User extends \EmberChat\EntitiesOriginal\User
     /**
      * Gets called when the client leaves
      */
-    public function unsetClient()
+    public function removeClient(Client $client)
     {
-        /** @var $room Room */
-        foreach ($this->rooms as $key => $room) {
-            $room->removeUser($this);
-            unset($this->rooms[$key]);
+        foreach ($this->clients as $index => $cmpClient) {
+            if ($client == $cmpClient) {
+                unset($this->clients[$index]);
+            }
+            // normalize clients array
+            $this->clients = array_values($this->clients);
         }
-        $this->client = null;
-        $this->online = false;
+        if (count($this->clients) <= 0) {
+            /** @var $room Room */
+            foreach ($this->rooms as $key => $room) {
+                $room->removeUser($this);
+                unset($this->rooms[$key]);
+            }
+            $this->online = false;
+        }
     }
 
     /**
@@ -124,5 +132,30 @@ class User extends \EmberChat\EntitiesOriginal\User
             }
         }
         return null;
+    }
+
+    /**
+     * Check if password is valid
+     *
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function auth($password)
+    {
+        // @TODO Should get a salt
+        if ($this->password === hash('sha256', $password)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        // @TODO Should get a salt
+        return hash('sha256', $this->auth . $this->password);
     }
 }

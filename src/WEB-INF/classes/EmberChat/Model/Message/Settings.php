@@ -15,14 +15,22 @@ class Settings extends SendMessage
      */
     protected $user;
 
+    /**
+     * @var string
+     */
+    protected $token;
 
     /**
-     * @param Client $client
+     * @param Client  $client
+     * @param boolean $sendToken
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, $sendToken)
     {
         parent::__construct();
         $this->user = $client->getUser();
+        if ($sendToken) {
+            $this->token = $client->getUser()->getToken();
+        }
         $messageSender = new MessageSender();
         $messageSender->sendMessageForClient($this, $client);
         unset($this);

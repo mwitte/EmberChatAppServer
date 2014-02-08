@@ -23,8 +23,8 @@ class MessageSender
 
     public function sendMessageForUser(\JsonSerializable $message, User $user)
     {
-        if($user->getClient()){
-            $this->sendMessageForClient($message, $user->getClient());
+        if (count($user->getClients()) > 0) {
+            $this->broadCastMessageForClients($message, $user->getClients());
         }
     }
 
@@ -45,7 +45,7 @@ class MessageSender
     {
         /** @var $client Client */
         foreach ($clients as $client) {
-            $client->getConnection()->send(json_encode($message));
+            $this->sendMessageForClient($message, $client);
         }
     }
 

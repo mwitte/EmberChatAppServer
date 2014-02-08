@@ -52,8 +52,28 @@ class MessageReceiver
      */
     public function processMessage(Client $client, $rawMessage)
     {
+        /** @var \stdClass $message */
         $message = json_decode($rawMessage);
+        if ($message === null) {
+            error_log('ERROR: Could not decode given message: ' . (string)$rawMessage);
+            return false;
+        }
+        if ($client->getUser()) {
+            $this->authenticatedClientProcessing($client, $message);
+        } else {
+            $authenticationHandler = new AuthenticationHandler($this->serviceLocator);
+            $authenticationHandler->authenticationMessage($client, $message);
+        }
+    }
 
+    /**
+     * Actions for authenticated clients
+     *
+     * @param Client    $client
+     * @param \stdClass $message
+     */
+    public function authenticatedClientProcessing(Client $client, \stdClass $message)
+    {
         /**
          * @TODO this is awful
          */
@@ -62,14 +82,13 @@ class MessageReceiver
                 $conversationHandler = new User($this->serviceLocator);
                 $conversationHandler->requestHistory($client, $message);
                 break;
-            case 'message':
-                if ($message->user) {
-                    $conversationHandler = new User($this->serviceLocator);
-                    $conversationHandler->newMessage($client, $message);
-                } else {
-                    $conversationHandler = new Room($this->serviceLocator);
-                    $conversationHandler->newMessage($client, $message);
-                }
+            case 'UserConversation':
+                $conversationHandler = new User($this->serviceLocator);
+                $conversationHandler->newMessage($client, $message);
+                break;
+            case 'RoomConversation':
+                $conversationHandler = new Room($this->serviceLocator);
+                $conversationHandler->newMessage($client, $message);
                 break;
             case 'RoomJoin':
                 $conversationHandler = new Room($this->serviceLocator);
@@ -93,12 +112,15 @@ class MessageReceiver
      */
     public function broadCastUserList()
     {
+        // @TODO refactor only for authed clients/users
         $clients = $this->clientRepository->findAll();
         $this->userRepository->resortUsers();
         /* @var $client Client */
         foreach ($clients as $connection) {
             $client = $clients[$connection];
-            new UserList($client, $this->serviceLocator);
+            if ($client->getUser()) {
+                new UserList($client, $this->serviceLocator);
+            }
         }
     }
 

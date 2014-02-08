@@ -43,14 +43,15 @@ class Client
         $this->serviceLocator = $serviceLocator;
         $this->userRepository = $this->serviceLocator->getUserRepository();
         $this->connection = $connection;
-        $this->user = $this->userRepository->getOfflineUser();
-        $this->user->setClient($this);
-        new Settings($this);
     }
 
     public function myDestruct()
     {
-        $this->user->unsetClient();
+        // only client has a user
+        if ($this->user) {
+            $this->user->removeClient($this);
+        }
+
     }
 
     /**

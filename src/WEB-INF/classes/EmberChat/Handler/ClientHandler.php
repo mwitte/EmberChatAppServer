@@ -40,8 +40,6 @@ class ClientHandler
     {
         $client = new Client($connection, $this->serviceLocator);
         $this->clientRepository->addClient($client, $connection);
-        $this->messageReceiver->broadCastUserList();
-        $this->messageReceiver->sendRoomList($client);
     }
 
     /**

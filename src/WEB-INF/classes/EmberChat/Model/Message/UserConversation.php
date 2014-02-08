@@ -38,7 +38,7 @@ class UserConversation extends SendMessage
         $messageSender->sendMessageForUser($this, $sender);
 
         // send also to receiver if got connected client
-        if($receiver->getClient()){
+        if (count($receiver->getClients()) > 0) {
             $this->user = $sender;
             $messageSender->sendMessageForUser($this, $receiver);
         }

@@ -5,10 +5,6 @@ namespace EmberChat\Handler\Conversation;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\UserConversation;
 use EmberChat\Model\Message\UserHistory;
-use EmberChat\Model\Message\UserList;
-use EmberChat\Model\Conversation;
-use EmberChat\Repository\ConversationRepository;
-use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
 /**

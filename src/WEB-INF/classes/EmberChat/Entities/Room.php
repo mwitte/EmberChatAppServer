@@ -12,6 +12,7 @@ class Room extends \EmberChat\EntitiesOriginal\Room
 
     /**
      * defines visible properties
+     *
      * @var array
      */
     protected $jsonProperties = array(
@@ -33,14 +34,16 @@ class Room extends \EmberChat\EntitiesOriginal\Room
     /**
      * A room got always a conversation
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->conversation = new \EmberChat\Model\Conversation();
     }
 
     /**
      * @return \EmberChat\Model\Conversation
      */
-    public function getConversation(){
+    public function getConversation()
+    {
         return $this->conversation;
     }
 
@@ -59,7 +62,7 @@ class Room extends \EmberChat\EntitiesOriginal\Room
      */
     public function addUser(User $user)
     {
-        if($this->getIndexForUser($user) === null){
+        if ($this->getIndexForUser($user) === null) {
             $this->users[] = $user;
             return true;
         }
@@ -74,7 +77,7 @@ class Room extends \EmberChat\EntitiesOriginal\Room
     public function removeUser(User $user)
     {
         $index = $this->getIndexForUser($user);
-        if($index === null){
+        if ($index === null) {
             return false;
         }
         unset($this->users[$index]);
@@ -90,9 +93,10 @@ class Room extends \EmberChat\EntitiesOriginal\Room
      *
      * @return int|null
      */
-    protected function getIndexForUser(User $user){
-        foreach($this->users as $key => $userIterator){
-            if($user->getId() === $userIterator->getId()){
+    protected function getIndexForUser(User $user)
+    {
+        foreach ($this->users as $key => $userIterator) {
+            if ($user->getId() === $userIterator->getId()) {
                 return $key;
             }
         }
