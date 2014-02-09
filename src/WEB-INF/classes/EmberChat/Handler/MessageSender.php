@@ -23,7 +23,7 @@ class MessageSender
 
     public function sendMessageForUser(\JsonSerializable $message, User $user)
     {
-        if (count($user->getClients()) > 0) {
+        if ($user->isOnline()) {
             $this->broadCastMessageForClients($message, $user->getClients());
         }
     }

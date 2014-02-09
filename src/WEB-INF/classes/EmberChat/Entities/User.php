@@ -43,6 +43,10 @@ class User extends \EmberChat\EntitiesOriginal\User
      */
     protected $rooms = array();
 
+    public function isOnline(){
+        return $this->online;
+    }
+
     /**
      * @param Client $client
      */
@@ -108,12 +112,12 @@ class User extends \EmberChat\EntitiesOriginal\User
             $this->clients = array_values($this->clients);
         }
         if (count($this->clients) <= 0) {
+            $this->online = false;
             /** @var $room Room */
             foreach ($this->rooms as $key => $room) {
                 $room->removeUser($this);
                 unset($this->rooms[$key]);
             }
-            $this->online = false;
         }
     }
 
@@ -144,7 +148,8 @@ class User extends \EmberChat\EntitiesOriginal\User
     public function auth($password)
     {
         // @TODO Should get a salt
-        if ($this->password === hash('sha256', $password)) {
+        // password should come sha256 hashed from db and from client so there is no plain text here
+        if ($this->password === $password) {
             return true;
         }
         return false;

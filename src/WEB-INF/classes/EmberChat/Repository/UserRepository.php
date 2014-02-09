@@ -77,8 +77,9 @@ class UserRepository extends AbstractRepository
      */
     public function getOfflineUser()
     {
+        /** @var $user User */
         foreach ($this->users as &$user) {
-            if (count($user->getClients()) <= 0) {
+            if ($user->isOnline()) {
                 return $user;
             }
         }
@@ -90,7 +91,6 @@ class UserRepository extends AbstractRepository
      */
     public function addUser($user)
     {
-        error_log('addUser: ' . count($this->users));
         array_push($this->users, $user);
     }
 
@@ -104,10 +104,10 @@ class UserRepository extends AbstractRepository
      */
     static function cmpClientState($a, $b)
     {
-        if ((bool)count($a->getClients()) == count((bool)$b->getClients())) {
+        if ($a->isOnline() == $b->isOnline()) {
             return 0;
         }
-        return (count($b->getClients())) ? +1 : -1;
+        return $b->isOnline() ? +1 : -1;
     }
 
     /**
