@@ -31,11 +31,14 @@ class User extends \EmberChat\Handler\Conversation
     {
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
 
-        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
-            $client->getUser(),
-            $otherUser
-        );
-        $conversation->appendContent($client->getUser(), $message->content);
+        // save message content only if it's not encrypted
+        if (!$message->encrypted) {
+            $conversation = $this->serviceLocator->getConversationRepository()->findConversationByUserPair(
+                $client->getUser(),
+                $otherUser
+            );
+            $conversation->appendContent($client->getUser(), $message->content);
+        }
 
         new UserConversation($client->getUser(), $otherUser, $message->content);
     }
@@ -61,18 +64,25 @@ class User extends \EmberChat\Handler\Conversation
      */
     public function keyExchange(Client $client, \stdClass $message)
     {
+
         // get other user
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
-        if(!$otherUser->isOnline()){
+        if (!$otherUser->isOnline()) {
             //@todo notify current client
             return false;
         }
-        if(count($otherUser->getClients()) > 1){
+
+        // if one user got multiple clients
+        if (count($otherUser->getClients()) > 1 || count($client->getUser()->getClients()) > 1) {
+            $message = new \stdClass();
+            $message->disable = true;
+            // set the other user as receiver that the current client receives this message for the correct conversation
+            new KeyExchange($otherUser, $client, $message);
             //@todo notify both that end-to-end encryption only works with one client each user
             return false;
         }
-
-        new KeyExchange($client, $otherUser->getClients()[0], $message);
+        // everything is fine, send exchange message
+        new KeyExchange($client->getUser(), $otherUser->getClients()[0], $message);
     }
 
 }

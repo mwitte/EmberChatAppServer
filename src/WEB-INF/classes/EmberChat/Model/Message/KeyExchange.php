@@ -16,21 +16,29 @@ class KeyExchange extends SendMessage
     protected $user;
 
     /**
-     * @param Client    $requester
+     * @param User      $requester
      * @param Client    $receiver
      * @param \stdClass $message
      */
-    public function __construct(Client $requester, Client $receiver, \stdClass $message)
+    public function __construct(User $requester, Client $receiver, \stdClass $message)
     {
         parent::__construct();
 
-        if($message->publicKey){
+        // append publicKey if given
+        if ($message->publicKey) {
             $this->publicKey = $message->publicKey;
         }
-        if($message->encryptedKey){
+
+        // append encryptedKey if given
+        if ($message->encryptedKey) {
             $this->encryptedKey = $message->encryptedKey;
         }
-        $this->user = $requester->getUser();
+
+        // disables the encryption for the receiver
+        if ($message->disable) {
+            $this->disable = $message->disable;
+        }
+        $this->user = $requester;
         $messageSender = new MessageSender();
         $messageSender->sendMessageForClient($this, $receiver);
         unset($this);

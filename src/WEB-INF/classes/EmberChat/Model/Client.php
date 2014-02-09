@@ -51,7 +51,6 @@ class Client
         if ($this->user) {
             $this->user->removeClient($this);
         }
-
     }
 
     /**
@@ -59,6 +58,7 @@ class Client
      */
     public function __destruct()
     {
+
         error_log('Client: __destruct');
     }
 
