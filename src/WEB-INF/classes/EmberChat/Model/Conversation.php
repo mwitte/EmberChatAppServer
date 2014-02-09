@@ -22,7 +22,7 @@ class Conversation
      */
     public function appendContent(User $user, $line)
     {
-        $this->content[] = array("user" => $user->getName(), "content" => $line);
+        $this->content[] = array("user" => $user->getName(), "type" => "msg", "content" => $line);
     }
 
     public function sendMessage()

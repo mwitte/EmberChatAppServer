@@ -3,6 +3,7 @@
 namespace EmberChat\Handler\Conversation;
 
 use EmberChat\Model\Client;
+use EmberChat\Model\Message\KeyExchange;
 use EmberChat\Model\Message\UserConversation;
 use EmberChat\Model\Message\UserHistory;
 use Ratchet\ConnectionInterface;
@@ -50,6 +51,28 @@ class User extends \EmberChat\Handler\Conversation
         // get other user
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
         new UserHistory($client, $otherUser, $this->serviceLocator);
+    }
+
+    /**
+     * Client requests a encrypted key of other user
+     *
+     * @param Client    $clinet
+     * @param \stdClass $message
+     */
+    public function keyExchange(Client $client, \stdClass $message)
+    {
+        // get other user
+        $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
+        if(!$otherUser->isOnline()){
+            //@todo notify current client
+            return false;
+        }
+        if(count($otherUser->getClients()) > 1){
+            //@todo notify both that end-to-end encryption only works with one client each user
+            return false;
+        }
+
+        new KeyExchange($client, $otherUser->getClients()[0], $message);
     }
 
 }

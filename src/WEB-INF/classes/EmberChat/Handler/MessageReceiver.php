@@ -98,6 +98,10 @@ class MessageReceiver
                 $conversationHandler = new Room($this->serviceLocator);
                 $conversationHandler->leaveUser($client, $message);
                 break;
+            case 'KeyExchange':
+                $conversationHandler = new User($this->serviceLocator);
+                $conversationHandler->keyExchange($client, $message);
+                break;
             default:
                 error_log('Unkown message type: ');
                 error_log(var_export($message, true));
