@@ -60,7 +60,6 @@ class Room extends \EmberChat\Handler\Conversation
             $room->removeUser($client->getUser());
             return;
         }
-        new RoomJoin($client->getUser(), $room);
     }
 
     /**
@@ -87,7 +86,6 @@ class Room extends \EmberChat\Handler\Conversation
                 'WARING: Could not remove room ' . $room->getName() . ' of user ' . $client->getUser()->getName()
             );
         }
-        new RoomLeave($client->getUser(), $room);
     }
 
 }

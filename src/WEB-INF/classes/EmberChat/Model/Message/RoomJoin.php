@@ -27,5 +27,10 @@ class RoomJoin extends SendMessage
         $this->room = $room;
         $messageSender = new MessageSender();
         $messageSender->broadCastMessageForUsers($this, $room->getUsers());
+
+        $this->users = $room->getUsers();
+        $this->user = null;
+        $messageSender->sendMessageForUser($this, $user);
+        unset($this);
     }
 }

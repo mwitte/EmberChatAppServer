@@ -3,6 +3,8 @@
 namespace EmberChat\Entities;
 
 use EmberChat\Handler\Conversation;
+use EmberChat\Model\Message\RoomJoin;
+use EmberChat\Model\Message\RoomLeave;
 
 /**
  * @Entity @Table(name="room")
@@ -64,6 +66,8 @@ class Room extends \EmberChat\EntitiesOriginal\Room
     {
         if ($this->getIndexForUser($user) === null) {
             $this->users[] = $user;
+            // notify all users
+            new RoomJoin($user, $this);
             return true;
         }
         return false;
@@ -83,6 +87,8 @@ class Room extends \EmberChat\EntitiesOriginal\Room
         unset($this->users[$index]);
         // normalize array
         $this->users = array_values($this->users);
+        // notify all users
+        new RoomLeave($user, $this);
         return true;
     }
 
