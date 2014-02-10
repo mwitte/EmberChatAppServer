@@ -45,21 +45,16 @@ class Client
         $this->connection = $connection;
     }
 
-    public function myDestruct()
+    /**
+     * releases all references that this can be destructed
+     * @returns void
+     */
+    public function destruct()
     {
         // only client has a user
         if ($this->user) {
             $this->user->removeClient($this);
         }
-    }
-
-    /**
-     * @TODO This is not called, why?
-     */
-    public function __destruct()
-    {
-
-        error_log('Client: __destruct');
     }
 
     /**

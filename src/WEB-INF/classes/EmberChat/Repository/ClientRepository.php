@@ -42,11 +42,10 @@ class ClientRepository
     public function removeClient(ConnectionInterface $connection)
     {
         if ($this->clients->contains($connection)) {
+            /** @var Client $client */
             $client = $this->clients[$connection];
-            // @TODO BUG?
-            $client->myDestruct();
             $this->clients->detach($connection);
-            error_log('detached');
+            $client->destruct();
         }
     }
 
