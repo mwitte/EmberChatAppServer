@@ -38,6 +38,10 @@ class KeyExchange extends SendMessage
         if ($message->disable) {
             $this->disable = $message->disable;
         }
+
+        if ($message->acknowledge){
+            $this->acknowledge = $message->acknowledge;
+        }
         $this->user = $requester;
         $messageSender = new MessageSender();
         $messageSender->sendMessageForClient($this, $receiver);
