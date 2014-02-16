@@ -2,6 +2,7 @@
 
 namespace EmberChat\Model;
 
+use EmberChat\Model\Message\Connected;
 use EmberChat\Model\Message\Settings;
 use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
@@ -43,6 +44,7 @@ class Client
         $this->serviceLocator = $serviceLocator;
         $this->userRepository = $this->serviceLocator->getUserRepository();
         $this->connection = $connection;
+        new Connected($this);
     }
 
     /**
