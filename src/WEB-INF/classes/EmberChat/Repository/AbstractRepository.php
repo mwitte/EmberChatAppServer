@@ -2,6 +2,7 @@
 
 namespace EmberChat\Repository;
 
+
 use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
 
 /**
@@ -30,10 +31,9 @@ abstract class AbstractRepository
      */
     protected $proxyClass;
 
-    public function __construct()
+    public function __construct($initialContext)
     {
-        $this->connection = Factory::createContextConnection();
-        $this->session = $this->connection->createContextSession();
+        $this->initialContext = $initialContext;
     }
 
     /**
@@ -46,8 +46,7 @@ abstract class AbstractRepository
      */
     public function getProxy($proxyClass)
     {
-        $initialContext = $this->session->createInitialContext();
-        return $initialContext->lookup($proxyClass);
+        return $this->initialContext->lookup($proxyClass);
     }
 
     public function loadAll()

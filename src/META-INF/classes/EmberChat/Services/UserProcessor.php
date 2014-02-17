@@ -2,6 +2,8 @@
 
 namespace EmberChat\Services;
 
+use EmberChat\Services\AbstractProcessor;
+
 /**
  * A singleton session bean
  *
@@ -53,5 +55,18 @@ class UserProcessor extends AbstractProcessor
 
         // try to load the user
         return $repository->findOneBy(array('id' => $id));
+    }
+
+    /**
+     * Updates a user
+     *
+     * @param $user
+     */
+    public function updateEntity($user){
+        error_log('Processor updateEntity');
+        $entityManager = $this->getEntityManager();
+        $entityManager->merge($user);
+        $entityManager->flush();
+        return $user;
     }
 }

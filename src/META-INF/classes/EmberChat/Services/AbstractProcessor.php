@@ -8,7 +8,6 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use TechDivision\ApplicationServer\Interfaces\ApplicationInterface;
-use EmberChat\Entities\User;
 
 
 class AbstractProcessor
@@ -240,7 +239,8 @@ class AbstractProcessor
 
         // initialize the schema data from the entities
         $classes = array(
-            $entityManager->getClassMetadata('EmberChat\Entities\User')
+            $entityManager->getClassMetadata('EmberChat\Entities\User'),
+            $entityManager->getClassMetadata('EmberChat\Entities\Room')
         );
 
         // drop the schema if it already exists and create it new

@@ -3,12 +3,16 @@
 namespace EmberChat\Repository;
 
 use EmberChat\Entities\User;
+use EmberChat\Services\UserProcessor;
 
 class UserRepository extends AbstractRepository
 {
 
 
     protected $proxyClass = 'EmberChat\Services\UserProcessor';
+
+
+    protected $myRepo;
 
     /**
      * The dummy users
@@ -17,10 +21,21 @@ class UserRepository extends AbstractRepository
      */
     protected $users;
 
-    public function __construct()
+    public function __construct($initialContext, $serviceLocator)
     {
-        parent::__construct();
+        parent::__construct($initialContext);
         $this->users = $this->loadAll();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @TODO pretty dirty!!!
+     */
+    public function persistUser(User $user){
+        //$this->getProxy($this->proxyClass)->updatePassword($user->getPassword(), $user->getId());
+        error_log('persistUser');
+        $this->getProxy($this->proxyClass)->updateEntity($user);
     }
 
     /**

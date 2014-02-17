@@ -89,4 +89,17 @@ class User extends AbstractEntity
         $this->password = $password;
     }
 
+    /**
+     * @return string
+     */
+    public function getPassword($password)
+    {
+        return $this->password;
+    }
+
+
+    public function __sleep(){
+        return array('id', 'name', 'auth', 'password');
+    }
+
 }

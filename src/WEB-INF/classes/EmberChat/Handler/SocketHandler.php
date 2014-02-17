@@ -23,8 +23,7 @@ class SocketHandler extends AbstractHandler
 
     public function __construct()
     {
-        $this->serviceLocator = new ServiceLocator();
-        $this->clientHandler = new ClientHandler($this->serviceLocator);
+
     }
 
     /**
@@ -34,6 +33,8 @@ class SocketHandler extends AbstractHandler
     {
         error_log('SocketHandler, init');
         parent::init($config);
+        $this->serviceLocator = new ServiceLocator($this->getApplication());
+        $this->clientHandler = new ClientHandler($this->serviceLocator);
     }
 
     /**

@@ -89,4 +89,12 @@ class User
         $this->password = $password;
     }
 
+    /**
+     * @return string
+     */
+    public function gePassword()
+    {
+        return $this->password;
+    }
+
 }

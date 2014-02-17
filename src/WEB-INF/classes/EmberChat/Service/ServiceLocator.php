@@ -2,10 +2,13 @@
 
 namespace EmberChat\Service;
 
+use TechDivision\WebSocketContainer\Application;
 use EmberChat\Repository\ClientRepository;
 use EmberChat\Repository\ConversationRepository;
 use EmberChat\Repository\RoomRepository;
 use EmberChat\Repository\UserRepository;
+
+use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
 
 /**
  * Class ServiceLocator
@@ -15,6 +18,10 @@ use EmberChat\Repository\UserRepository;
  */
 class ServiceLocator
 {
+    /**
+     * @var \TechDivision\WebSocketContainer\Application
+     */
+    protected $application;
 
     /**
      * @var UserRepository
@@ -36,13 +43,36 @@ class ServiceLocator
      */
     protected $conversationRepository;
 
-    public function __construct()
+    public function __construct(Application $application)
     {
         // this hole service locator will get removed in future
-        $this->userRepository = new UserRepository();
+        $this->application = $application;
+
+        $connection = Factory::createContextConnection();
+        $session = $connection->createContextSession();
+        $initialContext = $session->createInitialContext();
+
+
+        $this->userRepository = new UserRepository($initialContext, $this);
         $this->clientRepository = new  ClientRepository();
-        $this->roomRepository = new RoomRepository();
+        $this->roomRepository = new RoomRepository($initialContext);
         $this->conversationRepository = new ConversationRepository();
+    }
+
+    /**
+     * @param \TechDivision\WebSocketContainer\Application $application
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
+    }
+
+    /**
+     * @return \TechDivision\WebSocketContainer\Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 
     /**

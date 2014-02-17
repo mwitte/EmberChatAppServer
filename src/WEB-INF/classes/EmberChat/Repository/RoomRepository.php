@@ -17,9 +17,9 @@ class RoomRepository extends AbstractRepository
      */
     protected $rooms;
 
-    public function __construct()
+    public function __construct($initialContext)
     {
-        parent::__construct();
+        parent::__construct($initialContext);
         $this->rooms = $this->loadAll();
     }
 

@@ -102,6 +102,10 @@ class MessageReceiver
                 $conversationHandler = new User($this->serviceLocator);
                 $conversationHandler->keyExchange($client, $message);
                 break;
+            case 'UpdateProfile':
+                $profileHandler = new Profile($this->serviceLocator);
+                $profileHandler->updateProfile($client, $message);
+                break;
             default:
                 error_log('Unkown message type: ');
                 error_log(var_export($message, true));
