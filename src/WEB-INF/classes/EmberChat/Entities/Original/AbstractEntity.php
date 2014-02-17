@@ -1,6 +1,6 @@
 <?php
 
-namespace EmberChat\EntitiesOriginal;
+namespace EmberChat\Entities\Original;
 
 abstract class AbstractEntity implements \JsonSerializable
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace EmberChat\Entities;
+namespace EmberChat\Entities\Original;
 
 /**
- * @Entity @Table(name="room")
+ * @MappedSuperclass
  */
-class Room
+class Room extends AbstractEntity
 {
 
 

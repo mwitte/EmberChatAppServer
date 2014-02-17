@@ -25,7 +25,7 @@ class AbstractProcessor
      *
      * @var string
      */
-    protected $pathToEntities = 'META-INF/classes/EmberChat/Entities';
+    protected $pathToEntities = 'WEB-INF/classes/EmberChat/Entities';
 
     /**
      * The application instance that provides the entity manager.

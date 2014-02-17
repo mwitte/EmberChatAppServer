@@ -7,7 +7,7 @@ use EmberChat\Model\Client;
 /**
  * @Entity @Table(name="user")
  */
-class User extends \EmberChat\EntitiesOriginal\User
+class User extends \EmberChat\Entities\Original\User
 {
 
     /**

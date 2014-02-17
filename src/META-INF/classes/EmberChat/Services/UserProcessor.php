@@ -2,6 +2,8 @@
 
 namespace EmberChat\Services;
 
+use EmberChat\Entities\MyUser;
+use EmberChat\Entities\User;
 use EmberChat\Services\AbstractProcessor;
 
 /**
@@ -62,7 +64,7 @@ class UserProcessor extends AbstractProcessor
      *
      * @param $user
      */
-    public function updateEntity($user){
+    public function updateEntity(User $user){
         error_log('Processor updateEntity');
         $entityManager = $this->getEntityManager();
         $entityManager->merge($user);

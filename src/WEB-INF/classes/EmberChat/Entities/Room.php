@@ -9,7 +9,7 @@ use EmberChat\Model\Message\RoomLeave;
 /**
  * @Entity @Table(name="room")
  */
-class Room extends \EmberChat\EntitiesOriginal\Room
+class Room extends \EmberChat\Entities\Original\Room
 {
 
     /**

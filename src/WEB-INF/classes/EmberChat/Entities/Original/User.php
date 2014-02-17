@@ -1,9 +1,9 @@
 <?php
 
-namespace EmberChat\EntitiesOriginal;
+namespace EmberChat\Entities\Original;
 
 /**
- * @Entity @Table(name="user")
+ * @MappedSuperclass
  */
 class User extends AbstractEntity
 {
