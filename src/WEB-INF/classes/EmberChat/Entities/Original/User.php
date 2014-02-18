@@ -34,6 +34,12 @@ class User extends AbstractEntity
     protected $password;
 
     /**
+     * @Column(type="boolean")
+     * @var boolean
+     */
+    protected $admin;
+
+    /**
      * @param string $id
      */
     public function setId($id)
@@ -97,9 +103,25 @@ class User extends AbstractEntity
         return $this->password;
     }
 
+    /**
+     * @param boolean $admin
+     */
+    public function setAdmin($admin)
+    {
+        $this->admin = $admin;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
 
     public function __sleep(){
-        return array('id', 'name', 'auth', 'password');
+        return array('id', 'name', 'auth', 'password', 'admin');
     }
 
 }

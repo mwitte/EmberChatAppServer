@@ -29,13 +29,23 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param User $user
-     *
-     * @TODO pretty dirty!!!
      */
     public function persistUser(User $user){
-        //$this->getProxy($this->proxyClass)->updatePassword($user->getPassword(), $user->getId());
-        error_log('persistUser');
         $this->getProxy($this->proxyClass)->updateEntity($user);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createNew(User $user){
+        if(!$this->findByAuth($user->getAuth())){
+            // generate unique id for this user
+            $user->setId(hash('sha256', mt_rand() . serialize($user) . mt_rand()));
+            $this->getProxy($this->proxyClass)->createNew($user);
+            $this->users[] = $user;
+            return true;
+        }
+        return false;
     }
 
     /**

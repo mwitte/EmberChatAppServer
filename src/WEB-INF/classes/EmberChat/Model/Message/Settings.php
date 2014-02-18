@@ -31,6 +31,7 @@ class Settings extends SendMessage
         if ($sendToken) {
             $this->token = $client->getUser()->getToken();
         }
+        $this->admin = $client->getUser()->getAdmin();
         $messageSender = new MessageSender();
         $messageSender->sendMessageForClient($this, $client);
         unset($this);

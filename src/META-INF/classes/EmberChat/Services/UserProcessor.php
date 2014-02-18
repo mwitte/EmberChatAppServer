@@ -71,4 +71,11 @@ class UserProcessor extends AbstractProcessor
         $entityManager->flush();
         return $user;
     }
+
+    public function createNew(User $user){
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        return $user;
+    }
 }

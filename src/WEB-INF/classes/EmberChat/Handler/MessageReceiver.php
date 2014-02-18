@@ -106,6 +106,10 @@ class MessageReceiver
                 $profileHandler = new Profile($this->serviceLocator);
                 $profileHandler->updateProfile($client, $message);
                 break;
+            case 'Admin':
+                $adminHandler = new Admin($this->serviceLocator);
+                $adminHandler->processMessage($client, $message);
+                break;
             default:
                 error_log('Unkown message type: ');
                 error_log(var_export($message, true));
