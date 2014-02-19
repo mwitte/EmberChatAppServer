@@ -4,7 +4,7 @@ namespace EmberChat\Model\Message;
 
 use EmberChat\Entities\Room;
 use EmberChat\Entities\User;
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\SendMessage;
 
 class RoomLeave extends SendMessage
@@ -25,8 +25,8 @@ class RoomLeave extends SendMessage
         parent::__construct();
         $this->user = $user;
         $this->room = $room;
-        $messageSender = new MessageSender();
-        $messageSender->broadCastMessageForUsers($this, $room->getUsers());
+        $standardSender = new StandardSender();
+        $standardSender->broadCastMessageForUsers($this, $room->getUsers());
         unset($this);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace EmberChat\Services;
 
+use EmberChat\Entities\Room;
+
 /**
  * A singleton session bean
  *
@@ -19,5 +21,12 @@ class RoomProcessor extends AbstractProcessor
 
         // try to load the users
         return $repository->findAll();
+    }
+
+    public function createNew(Room $room){
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($room);
+        $entityManager->flush();
+        return $room;
     }
 }

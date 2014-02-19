@@ -1,6 +1,7 @@
 <?php
 
-namespace EmberChat\Handler\Conversation;
+namespace EmberChat\Receiver;
+
 
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\KeyExchange;
@@ -8,13 +9,30 @@ use EmberChat\Model\Message\UserConversation;
 use EmberChat\Model\Message\UserHistory;
 use Ratchet\ConnectionInterface;
 
-/**
- * Class ConversationHandler
- *
- * @package EmberChat\Handler
- */
-class User extends \EmberChat\Handler\Conversation
+
+class UserReceiver extends AbstractReceiver
 {
+
+    /**
+     * @see \EmberChat\Receiver\ReceiverInterface::processMessage()
+     */
+    public function processMessage(Client $client, \stdClass $message)
+    {
+        switch ($message->subType) {
+            case 'RequestHistory':
+                $this->requestHistory($client, $message);
+                break;
+            case 'KeyExchange':
+                $this->keyExchange($client, $message);
+                break;
+            case 'Conversation':
+                $this->newMessage($client, $message);
+                break;
+            default:
+                error_log('Unkown User message subType: ');
+                error_log(var_export($message, true));
+        }
+    }
 
     /**
      * @var Client
@@ -84,5 +102,4 @@ class User extends \EmberChat\Handler\Conversation
         // everything is fine, send exchange message
         new KeyExchange($client->getUser(), $otherUser->getClients()[0], $message);
     }
-
 }

@@ -2,7 +2,7 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 
@@ -21,8 +21,8 @@ class AdminAction extends SendMessage
         $this->success = $success;
         $this->action = $action;
         $this->message = $message;
-        $messageSender = new MessageSender();
-        $messageSender->sendMessageForClient($this, $client);
+        $standardSender = new StandardSender();
+        $standardSender->sendMessageForClient($this, $client);
         unset($this);
     }
 

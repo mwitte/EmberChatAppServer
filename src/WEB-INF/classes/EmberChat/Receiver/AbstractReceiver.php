@@ -1,10 +1,17 @@
 <?php
 
-namespace EmberChat\Handler;
+namespace EmberChat\Receiver;
+
 
 use EmberChat\Service\ServiceLocator;
 
-class Conversation
+/**
+ * Class AbstractReceiver
+ *
+ *
+ * @package EmberChat\Receiver
+ */
+abstract class AbstractReceiver implements ReceiverInterface
 {
     /**
      * @var ServiceLocator
@@ -18,5 +25,4 @@ class Conversation
     {
         $this->serviceLocator = $serviceLocator;
     }
-
 }

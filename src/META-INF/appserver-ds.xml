@@ -3,7 +3,7 @@
         <database>
             <driver>pdo_mysql</driver>
             <databaseName>emberchat</databaseName>
-            <path>localhost</path>
+            <databaseHost>localhost</databaseHost>
             <user>emberchat</user>
             <password>emberchat</password>
         </database>

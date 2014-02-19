@@ -2,7 +2,7 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
@@ -43,8 +43,8 @@ class KeyExchange extends SendMessage
             $this->acknowledge = $message->acknowledge;
         }
         $this->user = $requester;
-        $messageSender = new MessageSender();
-        $messageSender->sendMessageForClient($this, $receiver);
+        $standardSender = new StandardSender();
+        $standardSender->sendMessageForClient($this, $receiver);
         unset($this);
     }
 

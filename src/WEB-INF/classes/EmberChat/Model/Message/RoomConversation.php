@@ -3,7 +3,7 @@
 namespace EmberChat\Model\Message;
 
 use EmberChat\Entities\Room;
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Conversation;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
@@ -36,8 +36,8 @@ class RoomConversation extends SendMessage
         $this->room = $room;
         $this->content = $this->buildMessageContent($sender, $content);
 
-        $messageSender = new MessageSender();
-        $messageSender->broadCastMessageForUsers($this, $room->getUsers());
+        $standardSender = new StandardSender();
+        $standardSender->broadCastMessageForUsers($this, $room->getUsers());
         unset($this);
     }
 

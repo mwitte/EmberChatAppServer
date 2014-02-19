@@ -1,32 +1,25 @@
 <?php
 
-namespace EmberChat\Handler;
+namespace EmberChat\Receiver;
 
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\Settings;
-use EmberChat\Service\ServiceLocator;
 
-class AuthenticationHandler
+
+class AuthenticationReceiver extends AbstractReceiver
 {
     /**
-     * @var ServiceLocator
+     * @param Client    $client
+     * @param \stdClass $message
+     *
+     * @return void
      */
-    protected $serviceLocator;
-
-    /**
-     * @param ServiceLocator $serviceLocator
-     */
-    public function __construct(ServiceLocator $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    public function authenticationMessage(Client $client, \stdClass $message)
+    public function processMessage(Client $client, \stdClass $message)
     {
         if ($message->type !== 'authentication') {
             error_log("WARNING: Wrong message type, authentication needed");
             error_log(var_export($message, true));
-            return false;
+            return;
         }
 
         if ($message->token) {
@@ -39,7 +32,7 @@ class AuthenticationHandler
         // if no user is given authentication failed
         if (!$user) {
             //@TODO send "try again" message
-            return false;
+            return;
         }
 
         // relate client with user on both sides
@@ -50,10 +43,9 @@ class AuthenticationHandler
         new Settings($client, $message->keep);
 
         // send user and room information
-        $messageReceiver = new MessageReceiver($this->serviceLocator);
-        $messageReceiver->broadCastUserList();
-        $messageReceiver->sendRoomList($client);
-        return true;
+        $standardReceiver = new StandardReceiver($this->serviceLocator);
+        $standardReceiver->broadCastUserList();
+        $standardReceiver->sendRoomList($client);
     }
 
     /**

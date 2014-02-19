@@ -2,7 +2,7 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
@@ -32,8 +32,8 @@ class Settings extends SendMessage
             $this->token = $client->getUser()->getToken();
         }
         $this->admin = $client->getUser()->getAdmin();
-        $messageSender = new MessageSender();
-        $messageSender->sendMessageForClient($this, $client);
+        $standardSender = new StandardSender();
+        $standardSender->sendMessageForClient($this, $client);
         unset($this);
     }
 

@@ -1,21 +1,35 @@
 <?php
 
-namespace EmberChat\Handler\Conversation;
+namespace EmberChat\Receiver;
 
-use EmberChat\Entities\User as UserEntity;
+
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\RoomConversation;
-use EmberChat\Model\Message\RoomJoin;
-use EmberChat\Model\Message\RoomLeave;
-use Ratchet\ConnectionInterface;
 
-/**
- * Class Room
- *
- * @package EmberChat\Handler
- */
-class Room extends \EmberChat\Handler\Conversation
+class RoomReceiver extends AbstractReceiver
 {
+
+
+    /**
+     * @see \EmberChat\Receiver\ReceiverInterface::processMessage()
+     */
+    public function processMessage(Client $client, \stdClass $message)
+    {
+        switch ($message->subType) {
+            case 'Conversation':
+                $this->newMessage($client, $message);
+                break;
+            case 'Join':
+                $this->joinUser($client, $message);
+                break;
+            case 'Leave':
+                $this->leaveUser($client, $message);
+                break;
+            default:
+                error_log('Unkown User message subType: ');
+                error_log(var_export($message, true));
+        }
+    }
 
     /**
      * @var Client
@@ -87,5 +101,4 @@ class Room extends \EmberChat\Handler\Conversation
             );
         }
     }
-
 }

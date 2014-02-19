@@ -1,27 +1,17 @@
 <?php
 
-namespace EmberChat\Handler;
+namespace EmberChat\Receiver;
 
 use EmberChat\Entities\User;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\AdminAction;
-use EmberChat\Service\ServiceLocator;
 
-class Admin
+
+class AdminReceiver extends AbstractReceiver
 {
     /**
-     * @var ServiceLocator
+     * @see \EmberChat\Receiver\ReceiverInterface::processMessage()
      */
-    protected $serviceLocator;
-
-    /**
-     * @param ServiceLocator $serviceLocator
-     */
-    public function __construct(ServiceLocator $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
     public function processMessage(Client $client, \stdClass $message)
     {
         if (!$client->getUser()->getAdmin()) {
@@ -40,10 +30,6 @@ class Admin
         }
     }
 
-    protected function removeUser(Client $client, \stdClass $message)
-    {
-        
-    }
 
     /**
      * User updates his profile
@@ -74,8 +60,8 @@ class Admin
         $newUser->setAdmin((bool)$msgUser->admin);
         if($this->serviceLocator->getUserRepository()->createNew($newUser)){
             new AdminAction($client, true, 'CreateUser');
-            $messageReceiver = new MessageReceiver($this->serviceLocator);
-            $messageReceiver->broadCastUserList();
+            $standardReceiver = new StandardReceiver($this->serviceLocator);
+            $standardReceiver->broadCastUserList();
         }else{
             new AdminAction($client, false, 'CreateUser', 'There is already a user with the auth ' . $newUser->getAuth());
         }

@@ -216,8 +216,7 @@ class AbstractProcessor
                     'dbname' => $databaseNode->getDatabaseName()
                         ->getNodeValue()
                         ->__toString(),
-                    // @TODO PATH??
-                    'host' => $databaseNode->getPath()
+                    'host' => $databaseNode->getDatabaseHost()
                         ->getNodeValue()
                         ->__toString()
 

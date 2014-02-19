@@ -1,6 +1,6 @@
 <?php
 
-namespace EmberChat\Handler;
+namespace EmberChat\Sender;
 
 use EmberChat\Entities\User;
 use EmberChat\Model\Client;
@@ -12,7 +12,7 @@ use Ratchet\ConnectionInterface;
  *
  * @package EmberChat\Handler
  */
-class MessageSender
+class StandardSender
 {
 
     /**

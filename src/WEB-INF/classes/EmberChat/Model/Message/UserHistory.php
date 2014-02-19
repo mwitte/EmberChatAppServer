@@ -4,7 +4,7 @@ namespace EmberChat\Model\Message;
 
 
 use EmberChat\Entities\User;
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Service\ServiceLocator;
@@ -46,8 +46,8 @@ class UserHistory extends SendMessage
 
         // @TODO send not the hole content! only the last ~50 entries or something
         $this->content = $conversation->getContent();
-        $messageSender = new MessageSender();
-        $messageSender->sendMessageForClient($this, $client);
+        $standardSender = new StandardSender();
+        $standardSender->sendMessageForClient($this, $client);
         unset($this);
     }
 }

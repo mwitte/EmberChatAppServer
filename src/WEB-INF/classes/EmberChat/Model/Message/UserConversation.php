@@ -2,7 +2,7 @@
 
 namespace EmberChat\Model\Message;
 
-use EmberChat\Handler\MessageSender;
+use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Conversation;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
@@ -34,13 +34,13 @@ class UserConversation extends SendMessage
 
         $this->content = $this->buildMessageContent($sender, $content);
         $this->user = $receiver;
-        $messageSender = new MessageSender();
-        $messageSender->sendMessageForUser($this, $sender);
+        $standardSender = new StandardSender();
+        $standardSender->sendMessageForUser($this, $sender);
 
         // send also to receiver if got connected client
         if ($receiver->isOnline()) {
             $this->user = $sender;
-            $messageSender->sendMessageForUser($this, $receiver);
+            $standardSender->sendMessageForUser($this, $receiver);
         }
         unset($this);
     }

@@ -3,10 +3,11 @@
 namespace EmberChat\Handler;
 
 use EmberChat\Model\Client;
+use EmberChat\Receiver\StandardReceiver;
 use EmberChat\Repository\ClientRepository;
-use EmberChat\Repository\UserRepository;
 use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
+
 
 class ClientHandler
 {
@@ -28,7 +29,7 @@ class ClientHandler
     {
         $this->serviceLocator = $serviceLocator;
         $this->clientRepository = $serviceLocator->getClientRepository();
-        $this->messageReceiver = new MessageReceiver($this->serviceLocator);
+        $this->standardReceiver = new StandardReceiver($this->serviceLocator);
     }
 
     /**
@@ -50,16 +51,22 @@ class ClientHandler
     public function unsetClient(ConnectionInterface $connection)
     {
         $this->clientRepository->removeClient($connection);
-        $this->messageReceiver->broadCastUserList();
+        $this->standardReceiver->broadCastUserList();
     }
 
     /**
      * @param ConnectionInterface $connection
-     * @param string              $message
+     * @param string              $rawMessage
      */
-    public function messageFromClient(ConnectionInterface $connection, $message)
+    public function messageFromClient(ConnectionInterface $connection, $rawMessage)
     {
-        $this->messageReceiver->processMessage($this->clientRepository->findClientByConnection($connection), $message);
+        /** @var \stdClass $message */
+        $message = json_decode($rawMessage);
+        if ($message === null) {
+            error_log('ERROR: Could not decode given message: ' . (string)$rawMessage);
+            return;
+        }
+        $this->standardReceiver->processMessage($this->clientRepository->findClientByConnection($connection), $message);
     }
 
 
