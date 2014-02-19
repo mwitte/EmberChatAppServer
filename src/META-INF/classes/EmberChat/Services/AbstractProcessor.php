@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
+use EmberChat\Entities\User;
 use TechDivision\ApplicationServer\Interfaces\ApplicationInterface;
 
 
@@ -59,8 +60,14 @@ class AbstractProcessor
                 $this->createSchema();
             }
 
+
         } catch (\Doctrine\DBAL\DBALException $e) {
             // doesn't do anything here, because SQLite is not enabled of updating the schema
+        }
+
+        try {
+            $this->createAdmin();
+        } catch (\Exception $e) {
         }
     }
 
@@ -192,31 +199,29 @@ class AbstractProcessor
             if ($datasourceNode->getName() == $this->getDatasourceName()) {
 
                 // initialize the database node
+                /** @var \TechDivision\ApplicationServer\Api\Node\DatabaseNode $databaseNode */
                 $databaseNode = $datasourceNode->getDatabase();
 
                 // initialize the connection parameters
                 $connectionParameters = array(
                     'driver' => $databaseNode->getDriver()
                         ->getNodeValue()
-                        ->__toString()
-                    /*,
+                        ->__toString(),
                     'user' => $databaseNode->getUser()
                         ->getNodeValue()
                         ->__toString(),
                     'password' => $databaseNode->getPassword()
                         ->getNodeValue()
-                        ->__toString()
-                    */
-                );
-
-                // initialize the path to the database when we use sqlite for example
-                if (($path = $databaseNode->getPath()
+                        ->__toString(),
+                    'dbname' => $databaseNode->getDatabaseName()
                         ->getNodeValue()
-                        ->__toString()) != null
-                ) {
-                    $connectionParameters['path']
-                        = $this->getApplication()->getWebappPath() . DIRECTORY_SEPARATOR . $path;
-                }
+                        ->__toString(),
+                    // @TODO PATH??
+                    'host' => $databaseNode->getPath()
+                        ->getNodeValue()
+                        ->__toString()
+
+                );
 
                 // set the connection parameters
                 $this->setConnectionParameters($connectionParameters);
@@ -246,5 +251,23 @@ class AbstractProcessor
         // drop the schema if it already exists and create it new
         $tool->dropSchema($classes);
         $tool->createSchema($classes);
+    }
+
+    /**
+     * Create the initial admin user
+     */
+    public function createAdmin()
+    {
+        $admin = new User();
+        $admin->setId('ceaee2ddbac8ffc4731bfc926efdbc6819dc7171626ef3b3969244e07605caa4');
+        $admin->setName('Admin');
+        $admin->setAuth('admin');
+        // password=password
+        $admin->setPassword('5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+        $admin->setAdmin(true);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($admin);
+        $entityManager->flush();
     }
 }
