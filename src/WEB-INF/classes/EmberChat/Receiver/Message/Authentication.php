@@ -3,9 +3,11 @@
 namespace EmberChat\Receiver\Message;
 
 use EmberChat\Model\Client;
+use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\Settings;
 use EmberChat\Receiver\AbstractReceiver;
 use EmberChat\Receiver\StandardReceiver;
+use EmberChat\Sender\BroadcastSender;
 
 /**
  * @package   EmberChatAppServer
@@ -45,8 +47,9 @@ class Authentication extends AbstractReceiver
 
         // send user and room information
         $standardReceiver = new StandardReceiver($this->serviceLocator);
-        $standardReceiver->broadCastUserList();
-        $standardReceiver->sendRoomList($client);
+        $broadCastSender = new BroadcastSender($this->serviceLocator);
+        $broadCastSender->userList();
+        new RoomList($client, $this->serviceLocator);
     }
 
     /**

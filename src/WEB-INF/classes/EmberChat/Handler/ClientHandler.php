@@ -5,6 +5,7 @@ namespace EmberChat\Handler;
 use EmberChat\Model\Client;
 use EmberChat\Receiver\StandardReceiver;
 use EmberChat\Repository\ClientRepository;
+use EmberChat\Sender\BroadcastSender;
 use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
@@ -54,7 +55,8 @@ class ClientHandler
     public function unsetClient(ConnectionInterface $connection)
     {
         $this->clientRepository->removeClient($connection);
-        $this->standardReceiver->broadCastUserList();
+        $broadCastSender = new BroadcastSender($this->serviceLocator);
+        $broadCastSender->userList();
     }
 
     /**

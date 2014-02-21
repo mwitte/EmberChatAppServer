@@ -6,7 +6,7 @@ use EmberChat\Entities\User;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\AdminAction;
 use EmberChat\Receiver\Message\Admin;
-use EmberChat\Receiver\StandardReceiver;
+use EmberChat\Sender\BroadcastSender;
 
 /**
  * @package   EmberChatAppServer
@@ -19,7 +19,7 @@ class CreateUser extends Admin
      */
     public function processMessage(Client $client, \stdClass $message)
     {
-        self::processMessage($client, $message);
+        parent::processMessage($client, $message);
         $msgUser = $message->user;
         if (!$msgUser || !$msgUser->name ||
             strlen($msgUser->name) < 4 ||
@@ -39,10 +39,11 @@ class CreateUser extends Admin
         $newUser->setAuth($msgUser->auth);
         $newUser->setPassword($msgUser->password);
         $newUser->setAdmin((bool)$msgUser->admin);
+
         if($this->serviceLocator->getUserRepository()->createNew($newUser)){
             new AdminAction($client, true, 'CreateUser');
-            $standardReceiver = new StandardReceiver($this->serviceLocator);
-            $standardReceiver->broadCastUserList();
+            $broadCastSender = new BroadcastSender($this->serviceLocator);
+            $broadCastSender->userList();
         }else{
             new AdminAction($client, false, 'CreateUser', 'There is already a user with the auth ' . $newUser->getAuth());
         }

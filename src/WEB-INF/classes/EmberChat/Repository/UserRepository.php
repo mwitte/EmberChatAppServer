@@ -24,6 +24,7 @@ class UserRepository extends AbstractRepository
      */
     protected $users;
 
+
     public function __construct($initialContext, $serviceLocator)
     {
         parent::__construct($initialContext);
@@ -39,6 +40,8 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param User $user
+     *
+     * @return bool
      */
     public function createNew(User $user){
         if(!$this->findByAuth($user->getAuth())){

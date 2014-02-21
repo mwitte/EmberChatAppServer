@@ -15,6 +15,11 @@ class StandardReceiver extends AbstractReceiver
 {
 
     /**
+     * Client can instantiate all classes within this namespace
+     */
+    const RECEIVER_MESSAGES_NAMESPACE = "\\EmberChat\\Receiver\\Message\\";
+
+    /**
      * @see \EmberChat\Receiver\ReceiverInterface::processMessage()
      */
     public function processMessage(Client $client, \stdClass $message)
@@ -39,47 +44,16 @@ class StandardReceiver extends AbstractReceiver
      */
     public function authenticatedClientProcessing(Client $client, \stdClass $message)
     {
-        $className = "\\EmberChat\\Receiver\\Message\\". $message->type;
+        $className = self::RECEIVER_MESSAGES_NAMESPACE . $message->type;
+        // check if class is defined
         if(class_exists($className)){
             /** @var ReceiverInterface $receiver */
             $receiver = new $className($this->serviceLocator);
             $receiver->processMessage($client, $message);
         }else{
-            error_log("Tried to instantiate class: " . $className);
+            error_log("Received unimplemented message type: " . $className);
             error_log(var_export($message, true));
         }
-    }
-
-
-    /**
-     * Broadcast the current user list to all clients
-     *
-     * @return void
-     */
-    public function broadCastUserList()
-    {
-        // @TODO refactor only for authed clients/users
-        $clients = $this->serviceLocator->getClientRepository()->findAll();
-        $this->serviceLocator->getUserRepository()->resortUsers();
-        /* @var $client Client */
-        foreach ($clients as $connection) {
-            $client = $clients[$connection];
-            if ($client->getUser()) {
-                new UserList($client, $this->serviceLocator);
-            }
-        }
-    }
-
-    /**
-     * Send the current room list to all clients
-     *
-     * @param Client $client
-     *
-     * @return void
-     */
-    public function sendRoomList(Client $client)
-    {
-        new RoomList($client, $this->serviceLocator);
     }
 
 }

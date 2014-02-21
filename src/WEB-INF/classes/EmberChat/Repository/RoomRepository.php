@@ -45,4 +45,17 @@ class RoomRepository extends AbstractRepository
             }
         }
     }
+
+    public function createNew(Room $room){
+        /** @var Room $roomIterator */
+        foreach($this->rooms as $roomIterator){
+            if($room->getName() === $roomIterator->getName()){
+                return false;
+            }
+        }
+        $room->setId(hash('sha256', mt_rand() . serialize($room) . mt_rand()));
+        $this->getProxy($this->proxyClass)->createNew($room);
+        $this->rooms[] = $room;
+        return true;
+    }
 }
