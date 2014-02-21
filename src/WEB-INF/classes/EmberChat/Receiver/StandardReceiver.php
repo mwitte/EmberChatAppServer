@@ -5,13 +5,11 @@ namespace EmberChat\Receiver;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\RoomList;
 use EmberChat\Model\Message\UserList;
-use Ratchet\ConnectionInterface;
+use EmberChat\Receiver\Message\Authentication;
 
 /**
- * Class MessageHandler
- *
- *
- * @package EmberChat\Handler
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  */
 class StandardReceiver extends AbstractReceiver
 {
@@ -21,11 +19,15 @@ class StandardReceiver extends AbstractReceiver
      */
     public function processMessage(Client $client, \stdClass $message)
     {
-        if ($client->getUser()) {
-            $this->authenticatedClientProcessing($client, $message);
-        } else {
-            $authentication = new AuthenticationReceiver($this->serviceLocator);
-            $authentication->processMessage($client, $message);
+        try{
+            if ($client->getUser()) {
+                $this->authenticatedClientProcessing($client, $message);
+            } else {
+                $authentication = new Authentication($this->serviceLocator);
+                $authentication->processMessage($client, $message);
+            }
+        }catch (\Exception $e){
+            error_log(var_export($e, true));
         }
     }
 
@@ -37,26 +39,14 @@ class StandardReceiver extends AbstractReceiver
      */
     public function authenticatedClientProcessing(Client $client, \stdClass $message)
     {
-        switch ($message->type) {
-            case 'Room':
-                $roomReceiver = new RoomReceiver($this->serviceLocator);
-                $roomReceiver->processMessage($client, $message);
-                break;
-            case 'User':
-                $userReceiver = new UserReceiver($this->serviceLocator);
-                $userReceiver->processMessage($client, $message);
-                break;
-            case 'Profile':
-                $profileHandler = new ProfileReceiver($this->serviceLocator);
-                $profileHandler->processMessage($client, $message);
-                break;
-            case 'Admin':
-                $adminHandler = new AdminReceiver($this->serviceLocator);
-                $adminHandler->processMessage($client, $message);
-                break;
-            default:
-                error_log('Unkown message type: ');
-                error_log(var_export($message, true));
+        $className = "\\EmberChat\\Receiver\\Message\\". $message->type;
+        if(class_exists($className)){
+            /** @var ReceiverInterface $receiver */
+            $receiver = new $className($this->serviceLocator);
+            $receiver->processMessage($client, $message);
+        }else{
+            error_log("Tried to instantiate class: " . $className);
+            error_log(var_export($message, true));
         }
     }
 

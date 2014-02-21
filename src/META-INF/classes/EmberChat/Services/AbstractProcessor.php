@@ -2,7 +2,6 @@
 
 namespace EmberChat\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -10,7 +9,10 @@ use Doctrine\ORM\Tools\SchemaValidator;
 use EmberChat\Entities\User;
 use TechDivision\ApplicationServer\Interfaces\ApplicationInterface;
 
-
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class AbstractProcessor
 {
 

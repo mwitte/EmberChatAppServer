@@ -7,6 +7,9 @@ use EmberChat\Model\Message\RoomJoin;
 use EmberChat\Model\Message\RoomLeave;
 
 /**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ *
  * @Entity @Table(name="room")
  */
 class Room extends \EmberChat\Entities\Original\Room

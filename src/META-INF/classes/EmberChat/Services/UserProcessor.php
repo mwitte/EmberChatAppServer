@@ -2,14 +2,14 @@
 
 namespace EmberChat\Services;
 
-use EmberChat\Entities\MyUser;
 use EmberChat\Entities\User;
 use EmberChat\Services\AbstractProcessor;
 
 /**
  * A singleton session bean
  *
- * @package EmberChat
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  * @Stateless
  */
 class UserProcessor extends AbstractProcessor

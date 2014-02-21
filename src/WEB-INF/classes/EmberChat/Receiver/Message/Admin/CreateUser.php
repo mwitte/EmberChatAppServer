@@ -1,44 +1,25 @@
 <?php
 
-namespace EmberChat\Receiver;
+namespace EmberChat\Receiver\Message\Admin;
 
 use EmberChat\Entities\User;
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\AdminAction;
+use EmberChat\Receiver\Message\Admin;
+use EmberChat\Receiver\StandardReceiver;
 
-
-class AdminReceiver extends AbstractReceiver
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
+class CreateUser extends Admin
 {
     /**
      * @see \EmberChat\Receiver\ReceiverInterface::processMessage()
      */
     public function processMessage(Client $client, \stdClass $message)
     {
-        if (!$client->getUser()->getAdmin()) {
-            error_log('Non admin user tried: ');
-            error_log(var_export($message, true));
-            //@TODO send a error message
-            return;
-        }
-        switch ($message->subType) {
-            case 'CreateUser':
-                $this->createUser($client, $message);
-                break;
-            default:
-                error_log('Unkown admin message subtype: ');
-                error_log(var_export($message, true));
-        }
-    }
-
-
-    /**
-     * User updates his profile
-     *
-     * @param Client    $client
-     * @param \stdClass $message
-     */
-    protected function createUser(Client $client, \stdClass $message)
-    {
+        self::processMessage($client, $message);
         $msgUser = $message->user;
         if (!$msgUser || !$msgUser->name ||
             strlen($msgUser->name) < 4 ||

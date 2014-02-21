@@ -4,10 +4,12 @@ namespace EmberChat\Services;
 
 use EmberChat\Entities\Room;
 
+
 /**
  * A singleton session bean
  *
- * @package EmberChat
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  * @Stateless
  */
 class RoomProcessor extends AbstractProcessor

@@ -7,6 +7,10 @@ use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class Settings extends SendMessage
 {
 

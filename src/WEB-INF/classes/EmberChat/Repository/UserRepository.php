@@ -3,8 +3,11 @@
 namespace EmberChat\Repository;
 
 use EmberChat\Entities\User;
-use EmberChat\Services\UserProcessor;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class UserRepository extends AbstractRepository
 {
 

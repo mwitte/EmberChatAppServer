@@ -1,12 +1,17 @@
 <?php
 
-namespace EmberChat\Receiver;
+namespace EmberChat\Receiver\Message;
 
 use EmberChat\Model\Client;
 use EmberChat\Model\Message\Settings;
+use EmberChat\Receiver\AbstractReceiver;
+use EmberChat\Receiver\StandardReceiver;
 
-
-class AuthenticationReceiver extends AbstractReceiver
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
+class Authentication extends AbstractReceiver
 {
     /**
      * @param Client    $client
@@ -16,11 +21,6 @@ class AuthenticationReceiver extends AbstractReceiver
      */
     public function processMessage(Client $client, \stdClass $message)
     {
-        if ($message->type !== 'authentication') {
-            error_log("WARNING: Wrong message type, authentication needed");
-            error_log(var_export($message, true));
-            return;
-        }
 
         if ($message->token) {
             // fetch user by given token
@@ -31,6 +31,7 @@ class AuthenticationReceiver extends AbstractReceiver
         }
         // if no user is given authentication failed
         if (!$user) {
+            error_log(var_export($message, true));
             //@TODO send "try again" message
             return;
         }

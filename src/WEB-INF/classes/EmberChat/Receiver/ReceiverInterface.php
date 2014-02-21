@@ -4,6 +4,10 @@ namespace EmberChat\Receiver;
 
 use EmberChat\Model\Client;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 interface ReceiverInterface
 {
     /**

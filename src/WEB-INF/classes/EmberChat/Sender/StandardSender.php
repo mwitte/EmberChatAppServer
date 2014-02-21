@@ -4,13 +4,10 @@ namespace EmberChat\Sender;
 
 use EmberChat\Entities\User;
 use EmberChat\Model\Client;
-use Ratchet\ConnectionInterface;
 
 /**
- * Class MessageHandler
- *
- *
- * @package EmberChat\Handler
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  */
 class StandardSender
 {

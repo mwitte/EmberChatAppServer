@@ -37,7 +37,8 @@ module.exports = function (grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        '<%= buildProperties.deploydir %>'
+                        '<%= buildProperties.deploydir %>/**/*',
+                        '!<%= buildProperties.deploydir %>/vendor/**'
                     ]
                 }]
             },

@@ -6,10 +6,8 @@ namespace EmberChat\Receiver;
 use EmberChat\Service\ServiceLocator;
 
 /**
- * Class AbstractReceiver
- *
- *
- * @package EmberChat\Receiver
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  */
 abstract class AbstractReceiver implements ReceiverInterface
 {

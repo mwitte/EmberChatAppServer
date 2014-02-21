@@ -5,6 +5,10 @@ namespace EmberChat\Repository;
 use EmberChat\Entities\User;
 use EmberChat\Model\Conversation;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class ConversationRepository
 {
 

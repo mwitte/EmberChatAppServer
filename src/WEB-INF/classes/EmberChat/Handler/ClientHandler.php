@@ -8,7 +8,10 @@ use EmberChat\Repository\ClientRepository;
 use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
-
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class ClientHandler
 {
 

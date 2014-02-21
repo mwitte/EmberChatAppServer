@@ -10,11 +10,12 @@ use EmberChat\Repository\UserRepository;
 
 use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
 
+
 /**
- * Class ServiceLocator
  * Will get replaced by a dependency injection framework in future
  *
- * @package EmberChat\Service
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
  */
 class ServiceLocator
 {

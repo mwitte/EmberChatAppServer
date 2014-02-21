@@ -4,6 +4,10 @@ namespace EmberChat\Repository;
 
 use EmberChat\Entities\Room;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class RoomRepository extends AbstractRepository
 {
 

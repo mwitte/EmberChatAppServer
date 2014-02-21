@@ -3,13 +3,16 @@
 namespace EmberChat\Model;
 
 use EmberChat\Model\Message\Connected;
-use EmberChat\Model\Message\Settings;
 use EmberChat\Entities\User;
 use EmberChat\Repository\UserRepository;
 use EmberChat\Repository\RoomRepository;
 use EmberChat\Service\ServiceLocator;
 use Ratchet\ConnectionInterface;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class Client
 {
 

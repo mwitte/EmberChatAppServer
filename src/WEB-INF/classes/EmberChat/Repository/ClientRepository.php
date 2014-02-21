@@ -6,6 +6,10 @@ namespace EmberChat\Repository;
 use EmberChat\Model\Client;
 use Ratchet\ConnectionInterface;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class ClientRepository
 {
 

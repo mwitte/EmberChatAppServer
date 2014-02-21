@@ -7,6 +7,10 @@ use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Service\ServiceLocator;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class RoomList extends SendMessage
 {
 

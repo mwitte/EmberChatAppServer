@@ -7,6 +7,10 @@ use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
 use EmberChat\Entities\User;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class KeyExchange extends SendMessage
 {
 
@@ -39,7 +43,7 @@ class KeyExchange extends SendMessage
             $this->disable = $message->disable;
         }
 
-        if ($message->acknowledge){
+        if ($message->acknowledge) {
             $this->acknowledge = $message->acknowledge;
         }
         $this->user = $requester;

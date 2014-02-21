@@ -3,6 +3,9 @@
 namespace EmberChat\Entities\Original;
 
 /**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ *
  * @MappedSuperclass
  */
 class User extends AbstractEntity

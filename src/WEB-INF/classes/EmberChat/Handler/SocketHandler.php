@@ -7,7 +7,10 @@ use Ratchet\ConnectionInterface;
 use TechDivision\WebSocketContainer\Handlers\HandlerConfig;
 use TechDivision\WebSocketContainer\Handlers\AbstractHandler;
 
-
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 class SocketHandler extends AbstractHandler
 {
 

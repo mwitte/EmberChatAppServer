@@ -2,6 +2,10 @@
 
 namespace EmberChat\Entities\Original;
 
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 abstract class AbstractEntity implements \JsonSerializable
 {
 

@@ -2,7 +2,10 @@
 
 namespace EmberChat\Model;
 
-
+/**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ */
 abstract class SendMessage implements \JsonSerializable
 {
 

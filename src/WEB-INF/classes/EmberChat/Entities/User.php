@@ -5,6 +5,9 @@ namespace EmberChat\Entities;
 use EmberChat\Model\Client;
 
 /**
+ * @package   EmberChatAppServer
+ * @author    Matthias Witte <wittematze@gmail.com>
+ *
  * @Entity @Table(name="user")
  */
 class User extends \EmberChat\Entities\Original\User
