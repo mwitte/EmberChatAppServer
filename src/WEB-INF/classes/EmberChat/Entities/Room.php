@@ -44,6 +44,15 @@ class Room extends \EmberChat\Entities\Original\Room
         $this->conversation = new \EmberChat\Model\Conversation();
     }
 
+    public function destruct(){
+        /** @var $user User */
+        foreach($this->users as $user){
+            $user->leaveRoom($this);
+        }
+        unset($this->users);
+        unset($this->conversation);
+    }
+
     /**
      * @return \EmberChat\Model\Conversation
      */

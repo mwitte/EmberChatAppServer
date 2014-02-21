@@ -31,4 +31,17 @@ class RoomProcessor extends AbstractProcessor
         $entityManager->flush();
         return $room;
     }
+
+    public function remove(Room $room){
+
+
+        $entityManager = $this->getEntityManager();
+        // @TODO why it the $room the same object like in websocket handler?
+        // @TODO why are there more properties that defined in __sleep()?
+        $roomMock = $entityManager->getPartialReference('\EmberChat\Entities\Room', array('id' => $room->getId()));
+
+        $entityManager->remove($roomMock);
+        $entityManager->flush();
+        return true;
+    }
 }

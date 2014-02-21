@@ -20,6 +20,10 @@ class Conversation extends AbstractReceiver
     public function processMessage(Client $client, \stdClass $message)
     {
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
+        if (!$otherUser) {
+            error_log('WARING: Could not find user ' . $message->user);
+            return;
+        }
 
         // save message content only if it's not encrypted
         if (!$message->encrypted) {

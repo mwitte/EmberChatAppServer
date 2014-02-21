@@ -58,4 +58,23 @@ class RoomRepository extends AbstractRepository
         $this->rooms[] = $room;
         return true;
     }
+
+    /**
+     * @param Room $room
+     *
+     * @return mixed
+     */
+    public function remove(Room $room){
+        // remove room in persistence
+        if($this->getProxy($this->proxyClass)->remove($room)){
+            foreach ($this->rooms as $key => $roomIterator) {
+                if ($roomIterator->getId() == $room->getId()) {
+                    unset($this->rooms[$key]);
+                    $this->rooms = array_values($this->rooms);
+                    $room->destruct();
+                    return true;
+                }
+            }
+        }
+    }
 }

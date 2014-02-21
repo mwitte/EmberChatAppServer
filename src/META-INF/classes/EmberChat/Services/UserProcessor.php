@@ -65,7 +65,6 @@ class UserProcessor extends AbstractProcessor
      * @param $user
      */
     public function updateEntity(User $user){
-        error_log('Processor updateEntity');
         $entityManager = $this->getEntityManager();
         $entityManager->merge($user);
         $entityManager->flush();

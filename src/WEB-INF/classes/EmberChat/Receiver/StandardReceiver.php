@@ -32,7 +32,7 @@ class StandardReceiver extends AbstractReceiver
                 $authentication->processMessage($client, $message);
             }
         }catch (\Exception $e){
-            error_log(var_export($e, true));
+            error_log("StandardReceiver Error: " . $e->getMessage() ."\n".$e->getTraceAsString());
         }
     }
 

@@ -55,4 +55,8 @@ class Room extends AbstractEntity
     {
         return $this->name;
     }
+
+    public function __sleep(){
+        return array('id', 'name');
+    }
 }
