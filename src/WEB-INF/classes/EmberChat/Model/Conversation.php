@@ -42,7 +42,7 @@ class Conversation
             // remove first entry
             array_shift($this->content);
         }
-        
+
         // add content
         $this->content[] = array(
             "user" => $user->getName(),

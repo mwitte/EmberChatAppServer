@@ -23,6 +23,8 @@ class Connected extends SendMessage
         parent::__construct();
 
         $this->version = $serviceLocator->getServerVersion();
+        
+        $this->serverStartTime = date('D M d Y H:i:s O', $serviceLocator->getStartTime());
 
         $standardSender = new StandardSender();
         $standardSender->sendMessageForClient($this, $client);

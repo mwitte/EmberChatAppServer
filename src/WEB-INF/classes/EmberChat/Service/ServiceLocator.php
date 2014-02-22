@@ -51,8 +51,14 @@ class ServiceLocator
      */
     protected $serverVersion = '0.0.0';
 
+    /**
+     * @var int
+     */
+    protected $startTime = 0;
+
     public function __construct(Application $application)
     {
+        $this->startTime = time();
         // this hole service locator will get removed in future
         $this->application = $application;
 
@@ -75,9 +81,17 @@ class ServiceLocator
     {
         $json = file_get_contents($this->application->getWebappPath() . DIRECTORY_SEPARATOR . 'package.json');
         $packageInfo = json_decode($json);
-        if($packageInfo->version){
+        if ($packageInfo->version) {
             $this->serverVersion = $packageInfo->version;
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
     }
 
     /**
