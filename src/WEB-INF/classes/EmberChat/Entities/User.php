@@ -46,7 +46,8 @@ class User extends \EmberChat\Entities\Original\User
      */
     protected $rooms = array();
 
-    public function isOnline(){
+    public function isOnline()
+    {
         return $this->online;
     }
 
@@ -152,7 +153,7 @@ class User extends \EmberChat\Entities\Original\User
     {
         // @TODO Should get a salt
         // password should come sha256 hashed from db and from client so there is no plain text here
-        if ($this->password === $password) {
+        if ($this->password === hash('sha256', $password)) {
             return true;
         }
         return false;
