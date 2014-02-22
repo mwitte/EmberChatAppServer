@@ -47,7 +47,7 @@ class Client
         $this->serviceLocator = $serviceLocator;
         $this->userRepository = $this->serviceLocator->getUserRepository();
         $this->connection = $connection;
-        new Connected($this);
+        new Connected($this, $serviceLocator);
     }
 
     /**

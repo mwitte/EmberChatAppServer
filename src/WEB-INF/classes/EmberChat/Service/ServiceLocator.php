@@ -44,6 +44,13 @@ class ServiceLocator
      */
     protected $conversationRepository;
 
+    /**
+     * Current Version of this server
+     *
+     * @var string
+     */
+    protected $serverVersion = '0.0.0';
+
     public function __construct(Application $application)
     {
         // this hole service locator will get removed in future
@@ -53,11 +60,32 @@ class ServiceLocator
         $session = $connection->createContextSession();
         $initialContext = $session->createInitialContext();
 
+        $this->setServerVersion();
 
         $this->userRepository = new UserRepository($initialContext, $this);
         $this->clientRepository = new  ClientRepository();
         $this->roomRepository = new RoomRepository($initialContext);
         $this->conversationRepository = new ConversationRepository();
+    }
+
+    /**
+     * Reads the package.json and sets version
+     */
+    protected function setServerVersion()
+    {
+        $json = file_get_contents($this->application->getWebappPath() . DIRECTORY_SEPARATOR . 'package.json');
+        $packageInfo = json_decode($json);
+        if($packageInfo->version){
+            $this->serverVersion = $packageInfo->version;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getServerVersion()
+    {
+        return $this->serverVersion;
     }
 
     /**

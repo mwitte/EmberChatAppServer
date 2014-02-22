@@ -55,6 +55,14 @@ module.exports = function (grunt) {
                     src: '**/*'
                 }]
             },
+            package: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    dest: '<%= buildProperties.dist %>',
+                    src: 'package.json'
+                }]
+            },
             app: {
                 files: [{
                     expand: true,
@@ -122,6 +130,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'copy:src',
+        'copy:package',
         'requireApp'
     ]);
 
