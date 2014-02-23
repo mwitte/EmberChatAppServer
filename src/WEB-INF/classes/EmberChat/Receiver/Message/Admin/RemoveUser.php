@@ -27,6 +27,7 @@ class RemoveUser extends Admin
         $user = $this->serviceLocator->getUserRepository()->findById($message->user->id);
         if(!$user){
             error_log('RemoveUser message: user not found ' . $message->user->id);
+            return;
         }
         if($this->serviceLocator->getUserRepository()->remove($user)){
             $broadcastSender = new BroadcastSender($this->serviceLocator);

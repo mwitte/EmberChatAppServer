@@ -27,6 +27,7 @@ class RemoveRoom extends Admin
         $room = $this->serviceLocator->getRoomRepository()->findById($message->room->id);
         if(!$room){
             error_log('RemoveRoom message: room not found ' . $message->room->id);
+            return;
         }
         if($this->serviceLocator->getRoomRepository()->remove($room)){
             $broadcastSender = new BroadcastSender($this->serviceLocator);
