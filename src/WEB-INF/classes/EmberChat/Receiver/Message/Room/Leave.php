@@ -26,12 +26,12 @@ class Leave extends AbstractReceiver
         }
         if (!$room->removeUser($client->getUser())) {
             error_log(
-                'WARING: Could not remove user ' . $client->getUser()->getName() . ' of room ' . $room->getName()
+                'WARING: Could not remove user ' . $client->getUser()->getAuth() . ' of room ' . $room->getName()
             );
         }
         if (!$client->getUser()->leaveRoom($room)) {
             error_log(
-                'WARING: Could not remove room ' . $room->getName() . ' of user ' . $client->getUser()->getName()
+                'WARING: Could not remove room ' . $room->getName() . ' of user ' . $client->getUser()->getAuth()
             );
         }
     }

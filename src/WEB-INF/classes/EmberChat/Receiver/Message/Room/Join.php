@@ -25,11 +25,11 @@ class Join extends AbstractReceiver
             return;
         }
         if (!$room->addUser($client->getUser())) {
-            error_log('WARING: Could not add user ' . $client->getUser()->getName() . ' to room ' . $room->getName());
+            error_log('WARING: Could not add user ' . $client->getUser()->getAuth() . ' to room ' . $room->getName());
             return;
         }
         if (!$client->getUser()->joinRoom($room)) {
-            error_log('WARING: Could not add room ' . $room->getName() . ' to user ' . $client->getUser()->getName());
+            error_log('WARING: Could not add room ' . $room->getName() . ' to user ' . $client->getUser()->getAuth());
             $room->removeUser($client->getUser());
             return;
         }

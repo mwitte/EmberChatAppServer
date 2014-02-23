@@ -21,8 +21,10 @@ class CreateUser extends Admin
     {
         parent::processMessage($client, $message);
         $msgUser = $message->user;
-        if (!$msgUser || !$msgUser->name ||
-            strlen($msgUser->name) < 4 ||
+        if (!$msgUser ||
+            !$msgUser->forename ||
+            !$msgUser->surname ||
+            strlen($msgUser->forename . $msgUser->surname) < 4 ||
             !$msgUser->auth ||
             strlen($msgUser->auth) < 4 ||
             !$msgUser->password ||
@@ -35,17 +37,19 @@ class CreateUser extends Admin
         }
 
         $newUser = new User();
-        $newUser->setName($msgUser->name);
+        $newUser->setForename($msgUser->forename);
+        $newUser->setSurname($msgUser->surname);
         $newUser->setAuth($msgUser->auth);
         $newUser->setPassword($msgUser->password);
         $newUser->setAdmin((bool)$msgUser->admin);
 
-        if($this->serviceLocator->getUserRepository()->createNew($newUser)){
+        if ($this->serviceLocator->getUserRepository()->createNew($newUser)) {
             new AdminAction($client, true, 'CreateUser');
             $broadCastSender = new BroadcastSender($this->serviceLocator);
             $broadCastSender->userList();
-        }else{
-            new AdminAction($client, false, 'CreateUser', 'There is already a user with the auth ' . $newUser->getAuth());
+        } else {
+            new AdminAction($client, false, 'CreateUser', 'There is already a user with the auth ' . $newUser->getAuth(
+                ));
         }
     }
 }

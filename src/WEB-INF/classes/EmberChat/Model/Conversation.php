@@ -45,7 +45,7 @@ class Conversation
 
         // add content
         $this->content[] = array(
-            "user" => $user->getName(),
+            "user" => $user->getId(),
             "type" => "msg",
             "content" => $line,
             "date" => date('D M d Y H:i:s O')

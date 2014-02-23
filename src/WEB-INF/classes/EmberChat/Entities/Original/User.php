@@ -22,7 +22,13 @@ class User extends AbstractEntity
      * @Column(type="string")
      * @var string
      */
-    protected $name;
+    protected $forename;
+
+    /**
+     * @Column(type="string")
+     * @var string
+     */
+    protected $surname;
 
     /**
      * @Column(type="string")
@@ -59,19 +65,35 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param string $name
+     * @param string $forename
      */
-    public function setName($name)
+    public function setForename($forename)
     {
-        $this->name = $name;
+        $this->forename = $forename;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getForename()
     {
-        return $this->name;
+        return $this->forename;
+    }
+
+    /**
+     * @param string $surname
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurname()
+    {
+        return $this->surname;
     }
 
     /**
@@ -124,7 +146,7 @@ class User extends AbstractEntity
 
 
     public function __sleep(){
-        return array('id', 'name', 'auth', 'password', 'admin');
+        return array('id', 'forename', 'surname', 'auth', 'password', 'admin');
     }
 
 }

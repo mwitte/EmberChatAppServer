@@ -19,7 +19,8 @@ class User extends \EmberChat\Entities\Original\User
      * @var array
      */
     protected $jsonProperties = array(
-        'name',
+        'forename',
+        'surname',
         'id',
         'online'
     );

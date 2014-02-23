@@ -264,7 +264,8 @@ class AbstractProcessor
     {
         $admin = new User();
         $admin->setId('ceaee2ddbac8ffc4731bfc926efdbc6819dc7171626ef3b3969244e07605caa4');
-        $admin->setName('Admin');
+        $admin->setForename('Admin');
+        $admin->setSurname('');
         $admin->setAuth('admin');
         // password=password
         $admin->setPassword(hash('sha256', 'password'));
