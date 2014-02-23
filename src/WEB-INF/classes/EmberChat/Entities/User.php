@@ -168,4 +168,14 @@ class User extends \EmberChat\Entities\Original\User
         // @TODO Should get a salt
         return hash('sha256', $this->auth . $this->password);
     }
+
+    /**
+     * Removes all relations to this user
+     */
+    public function destruct(){
+        /** @var Client $client */
+        foreach($this->clients as $client){
+            $client->getConnection()->close();
+        }
+    }
 }

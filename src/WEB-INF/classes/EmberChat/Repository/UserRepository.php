@@ -151,4 +151,24 @@ class UserRepository extends AbstractRepository
         }
 
     }
+
+    /**
+     * @param User $user
+     *
+     * @return mixed
+     */
+    public function remove(User $user){
+        // remove room in persistence
+        if($this->getProxy($this->proxyClass)->remove($user)){
+            /** @var User $userIterator */
+            foreach ($this->users as $key => $userIterator) {
+                if ($userIterator->getId() == $user->getId()) {
+                    unset($this->users[$key]);
+                    $this->users = array_values($this->users);
+                    $user->destruct();
+                    return true;
+                }
+            }
+        }
+    }
 }

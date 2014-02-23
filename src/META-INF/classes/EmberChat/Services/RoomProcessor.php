@@ -33,8 +33,6 @@ class RoomProcessor extends AbstractProcessor
     }
 
     public function remove(Room $room){
-
-
         $entityManager = $this->getEntityManager();
         // @TODO why it the $room the same object like in websocket handler?
         // @TODO why are there more properties that defined in __sleep()?

@@ -77,4 +77,15 @@ class UserProcessor extends AbstractProcessor
         $entityManager->flush();
         return $user;
     }
+
+    public function remove(User $user){
+        $entityManager = $this->getEntityManager();
+        // @TODO why it the $room the same object like in websocket handler?
+        // @TODO why are there more properties that defined in __sleep()?
+        $roomMock = $entityManager->getPartialReference('\EmberChat\Entities\User', array('id' => $user->getId()));
+
+        $entityManager->remove($roomMock);
+        $entityManager->flush();
+        return true;
+    }
 }
