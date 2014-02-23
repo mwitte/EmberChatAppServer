@@ -31,6 +31,7 @@ class KeyExchange extends SendMessage
         // append publicKey if given
         if ($message->publicKey) {
             $this->publicKey = $message->publicKey;
+            $this->length = $message->length;
         }
 
         // append encryptedKey if given
