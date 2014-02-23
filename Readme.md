@@ -1,9 +1,7 @@
 # EmberChatAppServer #
 
 This is a chat server for [EmberChat](https://github.com/mwitte/EmberChat) based on
-[appserver.io](http://appserver.io/)
-
-Currently under heavy development.
+[appserver.io](http://appserver.io/). Head to the [project homepage](http://mwitte.github.io/EmberChat/).
 
 ### Dependencies ###
 

@@ -33,6 +33,7 @@ class Authentication extends AbstractReceiver
         }
         // if no user is given authentication failed
         if (!$user) {
+            error_log('Tried authentication:');
             error_log(var_export($message, true));
             //@TODO send "try again" message
             return;
