@@ -16,6 +16,7 @@ class StandardSender
      */
     public function __construct()
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
     }
 
     public function sendMessageForUser(\JsonSerializable $message, User $user)

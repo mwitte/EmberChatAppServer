@@ -50,6 +50,7 @@ class AbstractProcessor
      */
     public function __construct(ApplicationInterface $application)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         try {
 
             // set the application instance and initialize the connection parameters

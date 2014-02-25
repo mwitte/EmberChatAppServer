@@ -25,6 +25,7 @@ class BroadcastSender
      */
     public function __construct(ServiceLocator $serviceLocator)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->serviceLocator = $serviceLocator;
     }
 

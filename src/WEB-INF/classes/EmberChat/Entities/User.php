@@ -57,6 +57,7 @@ class User extends \EmberChat\Entities\Original\User
      */
     public function addClient(Client $client)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->clients[] = $client;
         $this->online = true;
     }
@@ -78,6 +79,7 @@ class User extends \EmberChat\Entities\Original\User
      */
     public function joinRoom(Room $room)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         if ($this->getIndexForRoom($room) === null) {
             $this->rooms[] = $room;
             return true;
@@ -94,6 +96,7 @@ class User extends \EmberChat\Entities\Original\User
      */
     public function leaveRoom(Room $room)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $index = $this->getIndexForRoom($room);
         if ($index === null) {
             return false;
@@ -109,6 +112,7 @@ class User extends \EmberChat\Entities\Original\User
      */
     public function removeClient(Client $client)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         foreach ($this->clients as $index => $cmpClient) {
             if ($client == $cmpClient) {
                 unset($this->clients[$index]);
@@ -173,6 +177,7 @@ class User extends \EmberChat\Entities\Original\User
      * Removes all relations to this user
      */
     public function destruct(){
+        error_log(date("H:i:s") .' ' .__METHOD__);
         /** @var Client $client */
         foreach($this->clients as $client){
             $client->getConnection()->close();

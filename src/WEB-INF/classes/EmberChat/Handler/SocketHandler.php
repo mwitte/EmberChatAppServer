@@ -34,6 +34,7 @@ class SocketHandler extends AbstractHandler
      */
     public function init(HandlerConfig $config)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         parent::init($config);
         $this->serviceLocator = new ServiceLocator($this->getApplication());
         $this->clientHandler = new ClientHandler($this->serviceLocator);
@@ -44,6 +45,7 @@ class SocketHandler extends AbstractHandler
      */
     public function onOpen(ConnectionInterface $connection)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->clientHandler->createNewClient($connection);
     }
 
@@ -52,6 +54,7 @@ class SocketHandler extends AbstractHandler
      */
     public function onMessage(ConnectionInterface $connection, $message)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->clientHandler->messageFromClient($connection, $message);
     }
 
@@ -60,6 +63,7 @@ class SocketHandler extends AbstractHandler
      */
     public function onClose(ConnectionInterface $connection)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->clientHandler->unsetClient($connection);
     }
 
@@ -68,6 +72,7 @@ class SocketHandler extends AbstractHandler
      */
     public function onError(ConnectionInterface $connection, \Exception $e)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->clientHandler->unsetClient($connection);
         error_log($e->__toString());
         $connection->close();

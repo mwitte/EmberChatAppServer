@@ -58,6 +58,7 @@ class ServiceLocator
 
     public function __construct(Application $application)
     {
+        error_log(date("H:i:s") .' ' .__METHOD__);
         $this->startTime = time();
         // this hole service locator will get removed in future
         $this->application = $application;
