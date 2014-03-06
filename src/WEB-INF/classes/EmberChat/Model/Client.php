@@ -44,7 +44,7 @@ class Client
         ConnectionInterface $connection,
         ServiceLocator $serviceLocator
     ) {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $this->serviceLocator = $serviceLocator;
         $this->userRepository = $this->serviceLocator->getUserRepository();
         $this->connection = $connection;
@@ -57,7 +57,7 @@ class Client
      */
     public function destruct()
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         // only client has a user
         if ($this->user) {
             $this->user->removeClient($this);

@@ -3,7 +3,7 @@
 namespace EmberChat\Model\Message;
 
 
-use EmberChat\Entities\User;
+use EmberChat\Entities\Room;
 use EmberChat\Sender\StandardSender;
 use EmberChat\Model\Client;
 use EmberChat\Model\SendMessage;
@@ -13,7 +13,7 @@ use EmberChat\Service\ServiceLocator;
  * @package   EmberChatAppServer
  * @author    Matthias Witte <wittematze@gmail.com>
  */
-class UserHistory extends SendMessage
+class RoomHistory extends SendMessage
 {
 
     /**
@@ -21,12 +21,12 @@ class UserHistory extends SendMessage
      *
      * @var string
      */
-    protected $type = 'UserConversation';
+    protected $type = 'RoomConversation';
 
     /**
-     * @var User
+     * @var Room
      */
-    protected $user;
+    protected $room;
 
     /**
      * @var array
@@ -40,17 +40,16 @@ class UserHistory extends SendMessage
 
     /**
      * @param Client         $client
-     * @param User           $receiver
+     * @param Room           $room
      * @param ServiceLocator $serviceLocator
      */
-    public function __construct(Client $client, User $receiver, ServiceLocator $serviceLocator)
+    public function __construct(Client $client, Room $room, ServiceLocator $serviceLocator)
     {
         //parent::__construct();
-        $this->user = $receiver;
+        $this->room = $room;
         // get corresponding conversation
-        $conversation = $serviceLocator->getConversationRepository()->findConversationByUserPair(
-            $client->getUser(),
-            $receiver
+        $conversation = $serviceLocator->getConversationRepository()->findConversationByRoom(
+            $room
         );
 
         // @TODO send not the hole content! only the last ~50 entries or something

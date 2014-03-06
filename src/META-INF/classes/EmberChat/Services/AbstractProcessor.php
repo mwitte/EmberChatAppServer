@@ -33,7 +33,7 @@ class AbstractProcessor
     /**
      * The application instance that provides the entity manager.
      *
-     * @var Application
+     * @var ApplicationInterface
      */
     protected $application;
 
@@ -43,14 +43,14 @@ class AbstractProcessor
      * Checks on every start if the database already exists, if not
      * the database will be created immediately.
      *
-     * @param Application $application
+     * @param ApplicationInterface $application
      *            The application instance
      *
      * @return void
      */
     public function __construct(ApplicationInterface $application)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         try {
 
             // set the application instance and initialize the connection parameters

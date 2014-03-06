@@ -4,6 +4,7 @@ namespace EmberChat\Receiver\Message\Room;
 
 
 use EmberChat\Model\Client;
+use EmberChat\Model\Message\RoomHistory;
 use EmberChat\Receiver\AbstractReceiver;
 
 /**
@@ -33,5 +34,6 @@ class Join extends AbstractReceiver
             $room->removeUser($client->getUser());
             return;
         }
+        new RoomHistory($client, $room, $this->serviceLocator);
     }
 }

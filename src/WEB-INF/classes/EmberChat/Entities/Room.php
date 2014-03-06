@@ -41,12 +41,12 @@ class Room extends \EmberChat\Entities\Original\Room
      */
     public function __construct()
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $this->conversation = new \EmberChat\Model\Conversation();
     }
 
     public function destruct(){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         /** @var $user User */
         foreach($this->users as $user){
             $user->leaveRoom($this);
@@ -78,7 +78,7 @@ class Room extends \EmberChat\Entities\Original\Room
      */
     public function addUser(User $user)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         if ($this->getIndexForUser($user) === null) {
             $this->users[] = $user;
             // notify all users
@@ -95,7 +95,7 @@ class Room extends \EmberChat\Entities\Original\Room
      */
     public function removeUser(User $user)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $index = $this->getIndexForUser($user);
         if ($index === null) {
             return false;

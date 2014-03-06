@@ -2,6 +2,7 @@
 
 namespace EmberChat\Repository;
 
+use EmberChat\Entities\Room;
 use EmberChat\Entities\User;
 use EmberChat\Model\Conversation;
 
@@ -23,6 +24,20 @@ class ConversationRepository
     }
 
     /**
+     * @param Room $room
+     *
+     * @return Conversation
+     */
+    public function findConversationByRoom(Room $room)
+    {
+        if (!isset($this->conversations[$room->getId()])) {
+            $conversation = new Conversation();
+            $this->conversations[$room->getId()] = $conversation;
+        }
+        return $this->conversations[$room->getId()];
+    }
+
+    /**
      * @param User $userOne
      * @param User $userTwo
      *
@@ -31,8 +46,7 @@ class ConversationRepository
     public function findConversationByUserPair(User $userOne, User $userTwo)
     {
         $key = $this->getKeyByUserPair($userOne, $userTwo);
-        if (isset($this->conversations[$key])) {
-        } else {
+        if (!isset($this->conversations[$key])) {
             $conversation = new Conversation();
             $this->conversations[$key] = $conversation;
         }

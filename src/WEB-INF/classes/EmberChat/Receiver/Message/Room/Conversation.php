@@ -25,6 +25,10 @@ class Conversation extends AbstractReceiver
             error_log('WARING: Could not find room ' . $message->room);
             return;
         }
+
+        $conversation = $this->serviceLocator->getConversationRepository()->findConversationByRoom($room);
+        $conversation->appendContent($client->getUser(), $message->content);
+
         new RoomConversation($client->getUser(), $room, $message->content);
     }
 }

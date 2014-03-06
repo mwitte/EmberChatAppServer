@@ -17,7 +17,7 @@ class RoomProcessor extends AbstractProcessor
 
     public function findAll()
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\Room');
@@ -27,7 +27,7 @@ class RoomProcessor extends AbstractProcessor
     }
 
     public function createNew(Room $room){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $entityManager = $this->getEntityManager();
         $entityManager->persist($room);
         $entityManager->flush();
@@ -35,7 +35,7 @@ class RoomProcessor extends AbstractProcessor
     }
 
     public function remove(Room $room){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $entityManager = $this->getEntityManager();
         // @TODO why it the $room the same object like in websocket handler?
         // @TODO why are there more properties that defined in __sleep()?

@@ -15,7 +15,7 @@ class AppServlet extends StaticResourceServlet
 
     public function doGet(Request $req, Response $res)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $req->setUri($req->getUri() . 'index.html');
 
         parent::doGet($req, $res);

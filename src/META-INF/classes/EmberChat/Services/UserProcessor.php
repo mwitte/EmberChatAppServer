@@ -24,7 +24,7 @@ class UserProcessor extends AbstractProcessor
      */
     public function findByName($name)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');
@@ -35,7 +35,7 @@ class UserProcessor extends AbstractProcessor
 
     public function findAll()
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');
@@ -53,7 +53,7 @@ class UserProcessor extends AbstractProcessor
      */
     public function findById($id)
     {
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         // load the entity manager and the user repository
         $entityManager = $this->getEntityManager();
         $repository = $entityManager->getRepository('EmberChat\Entities\User');
@@ -68,7 +68,7 @@ class UserProcessor extends AbstractProcessor
      * @param $user
      */
     public function updateEntity(User $user){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $entityManager = $this->getEntityManager();
         $entityManager->merge($user);
         $entityManager->flush();
@@ -76,7 +76,7 @@ class UserProcessor extends AbstractProcessor
     }
 
     public function createNew(User $user){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $entityManager = $this->getEntityManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -84,7 +84,7 @@ class UserProcessor extends AbstractProcessor
     }
 
     public function remove(User $user){
-        error_log(date("H:i:s") .' ' .__METHOD__);
+
         $entityManager = $this->getEntityManager();
         // @TODO why it the $room the same object like in websocket handler?
         // @TODO why are there more properties that defined in __sleep()?
