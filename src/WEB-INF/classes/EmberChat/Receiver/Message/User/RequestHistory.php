@@ -21,6 +21,8 @@ class RequestHistory extends AbstractReceiver
     {
         // get other user
         $otherUser = $this->serviceLocator->getUserRepository()->findById($message->user);
-        new UserHistory($client, $otherUser, $this->serviceLocator);
+        if($otherUser){
+            new UserHistory($client, $otherUser, $this->serviceLocator);
+        }
     }
 }
