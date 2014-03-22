@@ -63,7 +63,7 @@ class ServiceLocator
         // this hole service locator will get removed in future
         $this->application = $application;
 
-        $connection = Factory::createContextConnection();
+        $connection = Factory::createContextConnection($application->getName());
         $session = $connection->createContextSession();
         $initialContext = $session->createInitialContext();
 

@@ -4,28 +4,4 @@
     <display-name>EmberChat AppServer</display-name>
     <description>The backend for the EmberChat Project</description>
 
-    <servlet>
-        <description><![CDATA[Serves static content]]></description>
-        <display-name>StaticResourceServlet</display-name>
-        <servlet-name>StaticResourceServlet</servlet-name>
-        <servlet-class>\TechDivision\ServletContainer\Servlets\StaticResourceServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description><![CDATA[Serves EmberChat app]]></description>
-        <display-name>AppServlet</display-name>
-        <servlet-name>AppServlet</servlet-name>
-        <servlet-class>\EmberChat\Servlets\AppServlet</servlet-class>
-    </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>AppServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>StaticResourceServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
-
 </web-app>
